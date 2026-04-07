@@ -1,7 +1,7 @@
 blank_issues_enabled: true
 contact_links:
   - name: 🗣 Subproject discussions 
-    url: https://github.com/camaraproject/{{repo_name}}/discussions
+    url: https://github.com/camaraproject/EdgeApplicationManagement/discussions
     about: Please ask and answer questions here.
   - name: 📖 CAMARA API Design Guidelines
     url: https://github.com/camaraproject/Commonalities/blob/main/documentation/CAMARA-API-Design-Guide.md
