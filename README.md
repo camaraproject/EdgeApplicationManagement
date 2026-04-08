@@ -15,11 +15,12 @@ Sandbox API Repository to describe, develop, document, and test the EdgeApplicat
 
 ## Scope
 
-* Service API(s) “EdgeApplicationManagement” (see APIBacklog.md) 
-* The API(s) provide(s) the API consumer with the ability to:  
-  * §Short API scope description§ !! Add here a scope description according to the API proposal
+* Service API “EdgeApplicationManagement” (see APIBacklog.md) 
+* The API provides the API consumer with the ability to:  
+  * Manage the lifecycle of Edge applications and instances
+  * Discover an operator's Edge Cloud zones and their status.
 * Describe, develop, document, and test the API(s)
-* Started: §start date§ !! Please fill in
+* Started: May 2024 (as part of the [Edge Cloud](https://github.com/camaraproject/EdgeCloud) sub project)
 
 <!-- CAMARA:RELEASE-INFO:START -->
 <!-- The following section is automatically maintained by the CAMARA project-administration tooling: https://github.com/camaraproject/project-administration -->
