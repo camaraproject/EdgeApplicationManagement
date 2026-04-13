@@ -11,7 +11,7 @@
 
 Sandbox API Repository to describe, develop, document, and test the EdgeApplicationManagement Service API(s) within the Sub Project [EdgeCloud](https://lf-camaraproject.atlassian.net/wiki/x/ujLe).
 
-* API Repository [wiki page](https://lf-camaraproject.atlassian.net/wiki/x/ujLe) !! to be updated when wiki page for the repository is created
+* API Repository [wiki page](https://lf-camaraproject.atlassian.net/wiki/x/AoAJKw)
 
 ## Scope
 
