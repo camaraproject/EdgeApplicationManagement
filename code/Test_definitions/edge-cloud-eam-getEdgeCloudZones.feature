@@ -50,7 +50,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
   #Errors
   #/edge-cloud-zones	GET	404
   @EdgeCloud_EAM_getEdgeCloudZone_404.1_not_found
-  Scenario: Get information of existing Edge Cloud Zones with optional parameters ("region")
+  Scenario: Get information of existing Edge Cloud Zones with invalid optional parameters ("region")
     Given the path parameter "$.region" is set to an invalid region
     When When the request "getEdgeCloudZone" is sent
     Then response code is 404
