@@ -61,7 +61,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getClusters
   #Errors
   #/clusters	GET	404
   @EdgeCloud_EAM_getClusters_404.1_not_found
-  Scenario: Get information of existing clusters with optional parameters ("region")
+  Scenario: Get information of existing clusters with invalid optional parameters ("region")
     Given the path parameter "$.region" is set to an invalid region
     When When the request "getClusters" is sent
     Then response code is 404
