@@ -15,7 +15,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operations getApps
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
   # Success scenarios
-@EdgeCloud_EAM_getApps_01_generic_success_scenario
+  @EdgeCloud_EAM_getApps_01_generic_success_scenario
   Scenario: Get information of all existing applications
     Given there are applications submitted by operation submitApp
     When the request "getApps" is sent
@@ -26,7 +26,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operations getApps
     And the response body complies with the OAS schema at "/components/schemas/AppManifest"
   # Errors
   # Error 404
-@EdgeCloud_EAM_getApps_404.1_apps_not_found
+  @EdgeCloud_EAM_getApps_404.1_apps_not_found
   Scenario: Get a list of application that the user has permission to view
     Given there are not any application submitted by operation submitApp
     When the request "getApps" is sent
@@ -37,7 +37,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operations getApps
     And the response property "$.code" is "NOT_FOUND"
     And the response property "$.message" contains a user friendly text
   # Errors 403
-@EdgeCloud_eam_getApps_403.1_missing_access_token_scope
+  @EdgeCloud_eam_getApps_403.1_missing_access_token_scope
   Scenario: Missing access token scope
     Given the header "Authorization" is set to an access token that does not include the required scope
     When the request "getApps" is sent
