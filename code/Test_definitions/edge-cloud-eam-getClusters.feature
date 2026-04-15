@@ -49,7 +49,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getClusters
     And the response body complies with the OAS schema at "/components/schemas/ClusterInfo"
   #/clusters	GET	200	filtered by clusterRef
   @EdgeCloud_EAM_getClusters_04_generic_success_scenario_filtered_by_clusterRef
-  Scenario: Get information of existing clusters with optional parameters ("edgeCloudZoneId")
+  Scenario: Get information of existing clusters with optional parameters ("clusterRef")
     Given There are at least one cluster available
     And the path parameter "$.clusterRef" is set to a valid clusterRef
     When When the request "getClusters" is sent
