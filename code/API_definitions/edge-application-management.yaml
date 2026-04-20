@@ -255,6 +255,7 @@ paths:
             application/json:
               schema:
                 type: array
+                maxItems: 100
                 items:
                   $ref: "#/components/schemas/AppManifest"
         "401":
@@ -499,6 +500,7 @@ paths:
             application/json:
               schema:
                 type: array
+                maxItems: 100
                 items:
                   $ref: "#/components/schemas/AppInstanceInfo"
         "401":
@@ -682,6 +684,7 @@ paths:
             application/json:
               schema:
                 type: array
+                maxItems: 100
                 items:
                   $ref: "#/components/schemas/AppDeploymentInfo"
         "401":
@@ -919,6 +922,7 @@ paths:
             application/json:
               schema:
                 type: array
+                maxItems: 100
                 items:
                   $ref: "#/components/schemas/ClusterInfo"
         "401":
@@ -996,15 +1000,14 @@ components:
       description: |
         Correlation id for the different services
       schema:
-        type: string
+        $ref: "#/components/schemas/XCorrelator"
   headers:
     x-correlator:
       description: |
         Correlation id for the different services
       required: false
       schema:
-        type: string
-        format: uuid
+        $ref: "#/components/schemas/XCorrelator"
 
   callbacks:
     onAppInstanceStatusChange:
@@ -1070,6 +1073,7 @@ components:
               application/cloudevents+json:
                 schema:
                   type: array
+                  maxItems: 100
                   items:
                     $ref: "#/components/schemas/CloudEvent"
           responses:
@@ -1103,7 +1107,8 @@ components:
       properties:
         id:
           type: string
-          maxLength: 256
+          minLength: 1
+          maxLength: 1024
           description: Identifier of this event, that must be unique in the source context
           example: "123e4567-e89b-12d3-a456-426614174000"     
         source:
@@ -1123,7 +1128,7 @@ components:
         time:
           type: string
           format: date-time
-          description: Timestamp of when the occurrence happened. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+          description: Timestamp of when the occurrence happened (RFC 3339)
           example: "2023-01-17T13:18:23.682Z"
         data:
           type: object
@@ -1131,17 +1136,9 @@ components:
           properties:
             appInstanceId:
               type: string
-              format: uuid
-              pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
-              minLength: 36
-              maxLength: 36
               description: Application instance identifier (for instance-based events)
             appDeploymentId:
               type: string
-              format: uuid
-              pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
-              minLength: 36
-              maxLength: 36
               description: Application deployment identifier (for deployment-based events)
             status:
               allOf:
@@ -1280,7 +1277,7 @@ components:
           description: Type of the credential - MUST be set to ACCESSTOKEN for now
         accessToken:
           type: string
-          maxLength: 2048
+          maxLength: 8192
           description: Access Token granting access to the POST operation to create notification
         accessTokenExpiresUtc:
           type: string
@@ -1377,10 +1374,12 @@ components:
           $ref: "#/components/schemas/AppId"
         edgeCloudZones:
           type: array
+          maxItems: 100
           items:
             $ref: "#/components/schemas/EdgeCloudZoneId"
         appInstances:
           type: array
+          maxItems: 100
           items:
             $ref: "#/components/schemas/AppInstanceId"
 
@@ -1427,13 +1426,7 @@ components:
               - accessPoints
             properties:
               interfaceId:
-                type: string
-                minLength: 4
-                maxLength: 32
-                pattern: ^[A-Za-z0-9][A-Za-z0-9_]{2,30}[A-Za-z0-9]$
-                description: |
-                  This is the interface Identifier that Application Provider
-                  defines when application is being submitted.
+                $ref: "#/components/schemas/interfaceId"
               accessPoints:
                 $ref: "#/components/schemas/AccessEndpoint"
           minItems: 1
@@ -1582,15 +1575,7 @@ components:
                     - visibilityType
                   properties:
                     interfaceId:
-                      type: string
-                      minLength: 4
-                      maxLength: 32
-                      pattern: ^[A-Za-z][A-Za-z0-9_]{3,31}$
-                      description: |
-                        Each Port and corresponding traffic protocol
-                        exposed by the component is identified by a name.
-                        Application client on user device requires this to
-                        uniquley idenify the interface.
+                      $ref: "#/components/schemas/interfaceId"
                     protocol:
                       type: string
                       enum:
@@ -2246,6 +2231,15 @@ components:
           $ref: "#/components/schemas/AdditionalStorage"
         gpu:
           $ref: "#/components/schemas/GpuInfo"
+
+    interfaceId:
+      type: string
+      minLength: 4
+      maxLength: 32
+      pattern: ^[A-Za-z0-9][A-Za-z0-9_]{2,30}[A-Za-z0-9]$
+      description: |
+        This is the interface Identifier that Application Provider
+        defines when application is being submitted.
 
     Ipv4Addr:
       type: string
