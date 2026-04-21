@@ -1135,11 +1135,9 @@ components:
           description: Event notification details payload
           properties:
             appInstanceId:
-              type: string
-              description: Application instance identifier (for instance-based events)
+              $ref: "#/components/schemas/AppInstanceId"
             appDeploymentId:
-              type: string
-              description: Application deployment identifier (for deployment-based events)
+              $ref: "#/components/schemas/AppDeploymentId"
             status:
               allOf:
                 - $ref: "#/components/schemas/CloudEventStatus"
@@ -1426,7 +1424,7 @@ components:
               - accessPoints
             properties:
               interfaceId:
-                $ref: "#/components/schemas/interfaceId"
+                $ref: "#/components/schemas/InterfaceId"
               accessPoints:
                 $ref: "#/components/schemas/AccessEndpoint"
           minItems: 1
@@ -1575,7 +1573,7 @@ components:
                     - visibilityType
                   properties:
                     interfaceId:
-                      $ref: "#/components/schemas/interfaceId"
+                      $ref: "#/components/schemas/InterfaceId"
                     protocol:
                       type: string
                       enum:
@@ -2232,7 +2230,7 @@ components:
         gpu:
           $ref: "#/components/schemas/GpuInfo"
 
-    interfaceId:
+    InterfaceId:
       type: string
       minLength: 4
       maxLength: 32
