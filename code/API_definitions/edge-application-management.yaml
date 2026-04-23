@@ -262,8 +262,6 @@ paths:
           $ref: "#/components/responses/401"
         "403":
           $ref: "#/components/responses/403"
-        "404":
-          $ref: "#/components/responses/404"
         "500":
           $ref: "#/components/responses/500"
         "503":
@@ -507,8 +505,6 @@ paths:
           $ref: "#/components/responses/401"
         "403":
           $ref: "#/components/responses/403"
-        "404":
-          $ref: "#/components/responses/404"
         "500":
           $ref: "#/components/responses/500"
         "503":
@@ -691,8 +687,6 @@ paths:
           $ref: "#/components/responses/401"
         "403":
           $ref: "#/components/responses/403"
-        "404":
-          $ref: "#/components/responses/404"
         "410":
           $ref: "#/components/responses/410"
         "500":
@@ -929,8 +923,6 @@ paths:
           $ref: "#/components/responses/401"
         "403":
           $ref: "#/components/responses/403"
-        "404":
-          $ref: "#/components/responses/404"
         "500":
           $ref: "#/components/responses/500"
         "503":
@@ -981,8 +973,6 @@ paths:
           $ref: "#/components/responses/401"
         "403":
           $ref: "#/components/responses/403"
-        "404":
-          $ref: "#/components/responses/404"
         "500":
           $ref: "#/components/responses/500"
         "503":
@@ -1128,7 +1118,7 @@ components:
         time:
           type: string
           format: date-time
-          description: Timestamp of when the occurrence happened (RFC 3339)
+          description: Timestamp of when the occurrence happened. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
           example: "2023-01-17T13:18:23.682Z"
         data:
           type: object
@@ -1182,6 +1172,7 @@ components:
       example: "https://notificationSendServer12.example.com"
 
     CloudEventStatus:
+      type: string
       description: |
         Status of the application instance or deployment
       enum:
@@ -1205,7 +1196,6 @@ components:
       type: object
       required:
         - sink
-        - sinkCredential
       properties:
         sink:
           type: string
@@ -1264,9 +1254,6 @@ components:
       type: object
       required:
         - credentialType
-        - accessToken
-        - accessTokenExpiresUtc
-        - accessTokenType
       properties:
         credentialType:
           type: string
@@ -1277,7 +1264,7 @@ components:
           type: string
           maxLength: 8192
           description: Access Token granting access to the POST operation to create notification
-        accessTokenExpiresUtc:
+        accessTokenExpireUtc:
           type: string
           format: date-time
           description: An absolute UTC instant at which the access token shall be considered expired. Token expiration SHOULD occur after the expiration of the application instance or deployment, allowing the client to be notified of any changes during its existence. If the token expires while the resource is still active, the client will stop receiving notifications. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
@@ -1446,6 +1433,7 @@ components:
       description: Name of the App Deployment, scoped to the AppProvider
 
     AppManifest:
+      type: object
       description: |
         Application information and requirements provided by the
         Application Provider
@@ -1616,6 +1604,7 @@ components:
       description: Human readable name of the Application Provider.
 
     ClusterInfo:
+      type: object
       description: Kubernetes cluster information
       required:
         - name
@@ -1774,23 +1763,25 @@ components:
         Addons for the Kubernetes cluster.
         Additional addons should be defined in application the helm chart
         (Service Mesh, Serverless, AI).
-      type: object
-      properties:
-        monitoring:
-          type: boolean
-          example: true
-          default: false
-          description: Enable monitoring for Kubernetes cluster.
-        ingress:
-          type: boolean
-          example: true
-          default: false
-          description: Enable ingress for Kubernetes cluster.
+      type: array
+      maxItems: 2
+      items:
+        type: string
+        enum:
+          - monitoring
+          - ingress
+        uniqueItems: true
+        maxItems: 2
+        default: []
+        example:
+        - monitoring
 
     K8sNetworking:
       description: |
         Kubernetes networking definition
       type: object
+      required:
+        - primaryNetwork
       properties:
         primaryNetwork:
           description: Definition of Kubernetes primary Network
@@ -1885,6 +1876,7 @@ components:
       example: "642f6105-7015-4af1-a4d1-e1ecb8437abc"
 
     KubernetesNodePool:
+      type: object
       description: |
         A Kubernetes node pool is a set of Kubernetes nodes that have the
         same configuration (vCPU, memory, networking, OS, etc) on each node.
@@ -1936,6 +1928,7 @@ components:
               example: 4096
 
     KubernetesResources:
+      type: object
       description: Definition of Kubernetes Cluster Infrastructure.
       required:
         - infraKind
