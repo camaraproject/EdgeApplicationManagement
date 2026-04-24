@@ -1791,7 +1791,7 @@ components:
           - monitoring
           - ingress
         uniqueItems: true
-        
+
     K8sNetworking:
       description: |
         Kubernetes networking definition
