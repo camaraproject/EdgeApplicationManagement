@@ -1791,10 +1791,7 @@ components:
           - monitoring
           - ingress
         uniqueItems: true
-        default: []
-        example:
-          - monitoring
-
+        
     K8sNetworking:
       description: |
         Kubernetes networking definition
