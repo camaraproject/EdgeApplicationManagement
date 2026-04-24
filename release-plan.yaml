@@ -35,7 +35,7 @@ dependencies:
 apis:
   - api_name: edge-application-management
     target_api_version: 0.1.0
-    target_api_status: draft
+    target_api_status: alpha
     main_contacts: 
       - JoseMConde
       - Seralogar
