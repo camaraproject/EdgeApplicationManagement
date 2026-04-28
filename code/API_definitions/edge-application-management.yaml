@@ -1096,6 +1096,7 @@ components:
               description: Access Token granting access to the POST operation to create
                 notification
               type: string
+              maxLength: 8192
             accessTokenExpiresUtc:
               type: string
               format: date-time
