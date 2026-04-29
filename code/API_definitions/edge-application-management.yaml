@@ -153,8 +153,7 @@ info:
     an Application on Edge Cloud.
     Edge Cloud Zones exists within a Edge Cloud Region.
     ---
-  contact:
-    email: sp-edc@lists.camaraproject.org
+  x-camara-commonalities: 0.8.0-rc.2
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
