@@ -167,7 +167,8 @@ servers:
     variables:
       apiRoot:
         default: http://localhost:9091
-        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
+        description: API root, defined by the service provider, e.g. `api.example.com`
+          or `api.example.com/somepath`
 
 tags:
   - name: Application
@@ -262,8 +263,6 @@ paths:
           $ref: "#/components/responses/401"
         "403":
           $ref: "#/components/responses/403"
-        "404":
-          $ref: "#/components/responses/404"
         "500":
           $ref: "#/components/responses/500"
         "503":
@@ -323,8 +322,7 @@ paths:
         - Application
       summary: |
         Delete an Application from an Edge Cloud Provider
-      description: Delete all the information and content
-        related to an Application
+      description: Delete all the information and content related to an Application
       operationId: deleteApp
       parameters:
         - $ref: "#/components/parameters/x-correlator"
@@ -362,8 +360,7 @@ paths:
               example:
                 status: 409
                 code: ABORTED
-                message: "App with a running application instance
-                  cannot be deleted"
+                message: "App with a running application instance cannot be deleted"
         "500":
           $ref: "#/components/responses/500"
         "503":
@@ -436,8 +433,7 @@ paths:
               example:
                 status: 409
                 code: ALREADY_EXISTS
-                message: "Application already instantiated in the given
-                  Edge Cloud Zone"
+                message: "Application already instantiated in the given Edge Cloud Zone"
         "500":
           $ref: "#/components/responses/500"
         "501":
@@ -507,8 +503,6 @@ paths:
           $ref: "#/components/responses/401"
         "403":
           $ref: "#/components/responses/403"
-        "404":
-          $ref: "#/components/responses/404"
         "500":
           $ref: "#/components/responses/500"
         "503":
@@ -691,8 +685,6 @@ paths:
           $ref: "#/components/responses/401"
         "403":
           $ref: "#/components/responses/403"
-        "404":
-          $ref: "#/components/responses/404"
         "410":
           $ref: "#/components/responses/410"
         "500":
@@ -929,8 +921,6 @@ paths:
           $ref: "#/components/responses/401"
         "403":
           $ref: "#/components/responses/403"
-        "404":
-          $ref: "#/components/responses/404"
         "500":
           $ref: "#/components/responses/500"
         "503":
@@ -942,10 +932,9 @@ paths:
             - edge-application-management:edge-cloud-zones:read
       tags:
         - Edge Cloud
-      summary: Retrieve a list of the operators Edge Cloud Zones and
-        their status
+      summary: Retrieve a list of the provider's Edge Cloud Zones and their status
       description: |
-        List of the operators Edge Cloud Zones and their
+        List of the provider's Edge Cloud Zones and their
         status, ordering the results by location and filtering by
         status (active/inactive/unknown)
       operationId: getEdgeCloudZones
@@ -981,8 +970,6 @@ paths:
           $ref: "#/components/responses/401"
         "403":
           $ref: "#/components/responses/403"
-        "404":
-          $ref: "#/components/responses/404"
         "500":
           $ref: "#/components/responses/500"
         "503":
@@ -1015,7 +1002,8 @@ components:
         post:
           tags:
             - App Instance CALLBACK Operation
-          summary: Provide a notification for a change in status of the instantiated application
+          summary: Provide a notification for a change in status of the instantiated
+            application
           description: |
             Instantiating an application is an asynchronous task. After the application status changes,
             the server will return a callback response at the specified URL.
@@ -1055,7 +1043,8 @@ components:
         post:
           tags:
             - App Deployment CALLBACK Operation
-          summary: Provide a notification for a change in status of the deployed application
+          summary: Provide a notification for a change in status of the deployed
+            application
           description: |
             Deploying an application is an asynchronous task. After the application deployment status changes,
             the server will return a callback response at the specified URL.
@@ -1094,6 +1083,41 @@ components:
               $ref: "#/components/responses/429"
 
   schemas:
+    AccessTokenCredential:
+      type: object
+      description: An access token credential. This type of credential is meant to be
+        used by API Consumers that have limited capabilities to handle
+        authorization requests.
+      allOf:
+        - $ref: "#/components/schemas/SinkCredential"
+        - type: object
+          properties:
+            accessToken:
+              description: Access Token granting access to the POST operation to create
+                notification
+              type: string
+              maxLength: 8192
+            accessTokenExpiresUtc:
+              type: string
+              format: date-time
+              description: |
+                An absolute UTC instant at which the access token shall be considered expired.
+                Token expiration SHOULD occur after the expiration of the application instance
+                or deployment, allowing the client to be notified of any changes during its
+                existence. If the token expires while the resource is still active, the client
+                will stop receiving notifications. It must
+                follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+              example: "2023-07-03T12:27:08.312Z"
+            accessTokenType:
+              description: Type of access token - MUST be set to bearer for now
+              type: string
+              enum:
+                - bearer
+          required:
+            - accessToken
+            - accessTokenExpiresUtc
+            - accessTokenType
+
     CloudEvent:
       description: Cloud Event notification following CloudEvents 1.0 specification
       type: object
@@ -1124,11 +1148,14 @@ components:
           type: string
           enum:
             - application/json
-          description: Media-type of the event payload encoding (must be application/json for CAMARA APIs)
+          description: Media-type of the event payload encoding (must be application/json
+            for CAMARA APIs)
         time:
           type: string
           format: date-time
-          description: Timestamp of when the occurrence happened (RFC 3339)
+          description: Timestamp of when the occurrence happened. It must follow [RFC
+            3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and
+            must have time zone.
           example: "2023-01-17T13:18:23.682Z"
         data:
           type: object
@@ -1182,6 +1209,7 @@ components:
       example: "https://notificationSendServer12.example.com"
 
     CloudEventStatus:
+      type: string
       description: |
         Status of the application instance or deployment
       enum:
@@ -1201,18 +1229,19 @@ components:
         - org.camaraproject.edge-application-management.v0.subscription-ended
 
     SubscriptionRequest:
-      description: The request for creating an event-type event subscription (implicit subscription, HTTP only)
+      description: The request for creating an event-type event subscription (implicit
+        subscription, HTTP only)
       type: object
       required:
         - sink
-        - sinkCredential
       properties:
         sink:
           type: string
           format: uri
           pattern: ^https:\/\/.+$
           maxLength: 2048
-          description: The address to which events shall be delivered using the selected protocol.
+          description: The address to which events shall be delivered using the selected
+            protocol.
           example: "https://endpoint.example.com/sink"
         sinkCredential:
           $ref: "#/components/schemas/SinkCredential"
@@ -1245,11 +1274,16 @@ components:
           type: string
           format: date-time
           example: 2023-01-17T13:18:23.682Z
-          description: The subscription expiration time (in date-time format) requested by the API consumer. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+          description: The subscription expiration time (in date-time format) requested by
+            the API consumer. It must follow [RFC
+            3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and
+            must have time zone.
         subscriptionMaxEvents:
           type: integer
           format: int32
-          description: Identifies the maximum number of event reports to be generated (>=1) requested by the API consumer - Once this number is reached, the subscription ends.
+          description: Identifies the maximum number of event reports to be generated
+            (>=1) requested by the API consumer - Once this number is reached,
+            the subscription ends.
           minimum: 1
           maximum: 2147483647
           example: 5
@@ -1260,32 +1294,21 @@ components:
             Example: If initialEvent is set to true and application is in a specific status, an event is triggered.
 
     SinkCredential:
-      description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
+      description: A sink credential provides authentication or authorization
+        information necessary to enable delivery of events to a target.
       type: object
       required:
         - credentialType
-        - accessToken
-        - accessTokenExpiresUtc
-        - accessTokenType
       properties:
         credentialType:
           type: string
           enum:
             - ACCESSTOKEN
           description: Type of the credential - MUST be set to ACCESSTOKEN for now
-        accessToken:
-          type: string
-          maxLength: 8192
-          description: Access Token granting access to the POST operation to create notification
-        accessTokenExpiresUtc:
-          type: string
-          format: date-time
-          description: An absolute UTC instant at which the access token shall be considered expired. Token expiration SHOULD occur after the expiration of the application instance or deployment, allowing the client to be notified of any changes during its existence. If the token expires while the resource is still active, the client will stop receiving notifications. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
-        accessTokenType:
-          type: string
-          enum:
-            - bearer
-          description: Type of access token - MUST be set to bearer for now
+      discriminator:
+        propertyName: credentialType
+        mapping:
+          ACCESSTOKEN: "#/components/schemas/AccessTokenCredential"
 
     AccessEndpoint:
       type: object
@@ -1446,6 +1469,7 @@ components:
       description: Name of the App Deployment, scoped to the AppProvider
 
     AppManifest:
+      type: object
       description: |
         Application information and requirements provided by the
         Application Provider
@@ -1616,6 +1640,7 @@ components:
       description: Human readable name of the Application Provider.
 
     ClusterInfo:
+      type: object
       description: Kubernetes cluster information
       required:
         - name
@@ -1722,7 +1747,9 @@ components:
 
     ErrorInfo:
       type: object
-      description: A structured error response providing details about a failed request, including the HTTP status code, an error code, and a human-readable message
+      description: A structured error response providing details about a failed
+        request, including the HTTP status code, an error code, and a
+        human-readable message
       required:
         - status
         - code
@@ -1774,23 +1801,21 @@ components:
         Addons for the Kubernetes cluster.
         Additional addons should be defined in application the helm chart
         (Service Mesh, Serverless, AI).
-      type: object
-      properties:
-        monitoring:
-          type: boolean
-          example: true
-          default: false
-          description: Enable monitoring for Kubernetes cluster.
-        ingress:
-          type: boolean
-          example: true
-          default: false
-          description: Enable ingress for Kubernetes cluster.
+      type: array
+      maxItems: 2
+      uniqueItems: true
+      items:
+        type: string
+        enum:
+          - monitoring
+          - ingress
 
     K8sNetworking:
       description: |
         Kubernetes networking definition
       type: object
+      required:
+        - primaryNetwork
       properties:
         primaryNetwork:
           description: Definition of Kubernetes primary Network
@@ -1885,6 +1910,7 @@ components:
       example: "642f6105-7015-4af1-a4d1-e1ecb8437abc"
 
     KubernetesNodePool:
+      type: object
       description: |
         A Kubernetes node pool is a set of Kubernetes nodes that have the
         same configuration (vCPU, memory, networking, OS, etc) on each node.
@@ -1936,6 +1962,7 @@ components:
               example: 4096
 
     KubernetesResources:
+      type: object
       description: Definition of Kubernetes Cluster Infrastructure.
       required:
         - infraKind
@@ -2104,8 +2131,7 @@ components:
                       maximum: 16384
                       example: 1024
                     minNodeGpuMemory:
-                      description: Minimum memory in giga bytes per cluster
-                        node in GPU pool.
+                      description: Minimum memory in giga bytes per cluster node in GPU pool.
                       type: integer
                       format: int32
                       minimum: 1
@@ -2342,7 +2368,8 @@ components:
 
     XCorrelator:
       type: string
-      description: Correlator string, UUID format recommended but any string matching the pattern can be used
+      description: Correlator string, UUID format recommended but any string matching
+        the pattern can be used
       pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
       maxLength: 256
       example: "b4333c46-49c0-4f62-80d7-f0ef930f1c46"
