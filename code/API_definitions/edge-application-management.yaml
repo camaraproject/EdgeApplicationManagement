@@ -2,7 +2,7 @@
 openapi: 3.0.3
 info:
   title: Edge Application Management API
-  version: wip
+  version: 0.1.0-alpha.1
   description: |
     Edge Application Management API allows API consumers to manage the
     Life Cycle of an Application and to Discover Edge Cloud Zones.
@@ -163,7 +163,7 @@ externalDocs:
   url: https://github.com/camaraproject/EdgeCloud
 
 servers:
-  - url: "{apiRoot}/edge-application-management/vwip"
+  - url: "{apiRoot}/edge-application-management/v0.1.0-alpha.1"
     variables:
       apiRoot:
         default: http://localhost:9091
