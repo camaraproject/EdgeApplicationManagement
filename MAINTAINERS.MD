@@ -5,3 +5,4 @@
 | Capgemini | Deepak Gunjal | gunjald |
 | Telefonica | Jose Manuel Conde Gómez | JoseMConde |
 | EdgeXR | Jon Gainsley | gainsley |
+| Nearby Computing | Sergi Alonso | seralogar |
