@@ -11,7 +11,7 @@ repository:
   release_track: independent
 
   # Uncomment and set when planning a meta-release participation:
-  # meta_release: Sync26
+  meta_release: Sync26
 
   # Release tag -- first release for a repository is r1.1
   # - New release cycle (increment first number, reset second to 1)
@@ -20,7 +20,7 @@ repository:
 
   # Release type being prepared (must be set before release can be triggered)
   # Options: none | pre-release-alpha | pre-release-rc | public-release | maintenance-release
-  target_release_type: none
+  target_release_type: pre-release-alpha
 
 # Dependencies on Commonalities and ICM releases
 # Update per ReleaseManagement requirements for each release cycle
@@ -33,7 +33,10 @@ dependencies:
 # - api_name: kebab-case identifier (used as filename in code/API_definitions/)
 # - target_api_status: draft | alpha | rc | public (draft allows no file yet)
 apis:
-  - api_name: placeholder-entry
+  - api_name: edge-application-management
     target_api_version: 0.1.0
-    target_api_status: draft
-    main_contacts:
+    target_api_status: alpha
+    main_contacts: 
+      - JoseMConde
+      - Seralogar
+      - Kevsy
