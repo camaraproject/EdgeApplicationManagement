@@ -174,7 +174,12 @@ tags:
     description: Application and Application Instance Lice Cycle Management
   - name: Edge Cloud
     description: Edge Cloud Zones Availability
-
+  - name: Cluster
+    description: Kubernetes Cluster information
+  - name: App Instance CALLBACK Operation
+    description: Operations for handling application instance callback notifications
+  - name: App Deployment CALLBACK Operation
+    description: Operations for handling application deployment callback notifications
 paths:
   /apps:
     post:
@@ -258,6 +263,8 @@ paths:
                 maxItems: 100
                 items:
                   $ref: "#/components/schemas/AppManifest"
+        "400":
+          $ref: "#/components/responses/400"
         "401":
           $ref: "#/components/responses/401"
         "403":
@@ -303,6 +310,8 @@ paths:
                 properties:
                   appManifest:
                     $ref: "#/components/schemas/AppManifest"
+        "400":
+          $ref: "#/components/responses/400"
         "401":
           $ref: "#/components/responses/401"
         "403":
@@ -413,6 +422,8 @@ paths:
               required: true
               schema:
                 type: string
+                format: uri
+                maxLength: 2048
           content:
             application/json:
               schema:
@@ -498,6 +509,8 @@ paths:
                 maxItems: 100
                 items:
                   $ref: "#/components/schemas/AppInstanceInfo"
+        "400":
+          $ref: "#/components/responses/400"
         "401":
           $ref: "#/components/responses/401"
         "403":
@@ -680,6 +693,8 @@ paths:
                 maxItems: 100
                 items:
                   $ref: "#/components/schemas/AppDeploymentInfo"
+        "400":
+          $ref: "#/components/responses/400"
         "401":
           $ref: "#/components/responses/401"
         "403":
@@ -916,6 +931,8 @@ paths:
                 maxItems: 100
                 items:
                   $ref: "#/components/schemas/ClusterInfo"
+        "400":
+          $ref: "#/components/responses/400"
         "401":
           $ref: "#/components/responses/401"
         "403":
@@ -965,6 +982,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EdgeCloudZones"
+        "400":
+          $ref: "#/components/responses/400"
         "401":
           $ref: "#/components/responses/401"
         "403":
@@ -979,6 +998,13 @@ components:
       description: OpenID Provider Configuration Information.
       type: openIdConnect
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
+    notificationsBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: "{$request.body#/sinkCredential.credentialType}"
+      description: |
+        Bearer token for notification delivery. Token format is determined
+        by `sinkCredential.credentialType` in the subscription request.
   parameters:
     x-correlator:
       name: x-correlator
@@ -1012,6 +1038,7 @@ components:
           parameters:
             - $ref: "#/components/parameters/x-correlator"
           security:
+            - {}
             - notificationsBearerAuth: []
           requestBody:
             description: Event notification with the status of the Application Instance
@@ -1053,6 +1080,7 @@ components:
           parameters:
             - $ref: "#/components/parameters/x-correlator"
           security:
+            - {}
             - notificationsBearerAuth: []
           requestBody:
             description: Event notification with the status of the Application Deployment
@@ -1099,6 +1127,7 @@ components:
             accessTokenExpiresUtc:
               type: string
               format: date-time
+              maxLength: 32
               description: |
                 An absolute UTC instant at which the access token shall be considered expired.
                 Token expiration SHOULD occur after the expiration of the application instance
@@ -1118,105 +1147,7 @@ components:
             - accessTokenType
 
     CloudEvent:
-      description: Cloud Event notification following CloudEvents 1.0 specification
-      type: object
-      required:
-        - id
-        - source
-        - type
-        - specversion
-        - time
-        - accessPoints
-      properties:
-        id:
-          type: string
-          minLength: 1
-          maxLength: 1024
-          description: Identifier of this event, that must be unique in the source context
-          example: "123e4567-e89b-12d3-a456-426614174000"
-        source:
-          $ref: "#/components/schemas/Source"
-        type:
-          $ref: "#/components/schemas/SubscriptionEventType"
-        specversion:
-          type: string
-          enum:
-            - "1.0"
-          description: Version of the CloudEvents specification (must be 1.0)
-        datacontenttype:
-          type: string
-          enum:
-            - application/json
-          description: Media-type of the event payload encoding (must be application/json
-            for CAMARA APIs)
-        time:
-          type: string
-          format: date-time
-          description: Timestamp of when the occurrence happened. It must follow [RFC
-            3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and
-            must have time zone.
-          example: "2023-01-17T13:18:23.682Z"
-        data:
-          type: object
-          description: Event notification details payload
-          properties:
-            appInstanceId:
-              $ref: "#/components/schemas/AppInstanceId"
-            appDeploymentId:
-              $ref: "#/components/schemas/AppDeploymentId"
-            status:
-              allOf:
-                - $ref: "#/components/schemas/CloudEventStatus"
-              description: New status of the application instance or deployment
-            terminationReason:
-              type: string
-              enum:
-                - SUBSCRIPTION_EXPIRED
-                - MAX_EVENTS_REACHED
-                - ACCESS_TOKEN_EXPIRED
-                - SUBSCRIPTION_DELETED
-                - NETWORK_TERMINATED
-                - DELIVERY_FAILURE
-                - RESOURCE_DELETED
-              description: |
-                Reason for subscription termination (for subscription-ended events):
-                - SUBSCRIPTION_EXPIRED: Subscription expire time has been reached
-                - MAX_EVENTS_REACHED: Maximum number of events has been reached
-                - ACCESS_TOKEN_EXPIRED: Access token expiration time has been reached
-                - SUBSCRIPTION_DELETED: Subscription was deleted by the API consumer
-                - NETWORK_TERMINATED: API server stopped sending notifications
-                - DELIVERY_FAILURE: Repeated failures delivering events to sink endpoint (non-retryable)
-                - RESOURCE_DELETED: Monitored application instance or deployment no longer exists
-            accessPoints:
-              $ref: "#/components/schemas/AccessEndpoint"
-
-    Source:
-      type: string
-      format: uri-reference
-      minLength: 1
-      maxLength: 2048
-      description: |
-        Identifies the context in which an event happened - be a non-empty `URI-reference` like:
-        - URI with a DNS authority:
-          * https://github.com/cloudevents
-          * mailto:cncf-wg-serverless@lists.cncf.io
-        - Universally-unique URN with a UUID:
-          * urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66
-        - Application-specific identifier:
-          * /cloudevents/spec/pull/123
-          * 1-555-123-4567
-      example: "https://notificationSendServer12.example.com"
-
-    CloudEventStatus:
-      type: string
-      description: |
-        Status of the application instance or deployment
-      enum:
-        - DEPLOYING
-        - RUNNING
-        - FAILED
-        - TERMINATING
-        - TERMINATED
+      $ref: "../common/CAMARA_event_common.yaml#/components/schemas/CloudEvent"
 
     SubscriptionEventType:
       type: string
@@ -1271,6 +1202,7 @@ components:
           type: object
         subscriptionExpireTime:
           type: string
+          maxLength: 32
           format: date-time
           example: 2023-01-17T13:18:23.682Z
           description: The subscription expiration time (in date-time format) requested by
@@ -1378,6 +1310,7 @@ components:
         the deployment request in the Edge Cloud Zone is successful.
 
     AppDeploymentInfo:
+      description: Information about the application deployment.
       type: object
       required:
         - appDeploymentName
@@ -1393,11 +1326,15 @@ components:
         appId:
           $ref: "#/components/schemas/AppId"
         edgeCloudZones:
+          description: |
+            List of Edge Cloud Zones where the application is deployed.
           type: array
           maxItems: 100
           items:
             $ref: "#/components/schemas/EdgeCloudZoneId"
         appInstances:
+          description: |
+            List of application instances created as part of this deployment.
           type: array
           maxItems: 100
           items:
@@ -1440,6 +1377,11 @@ components:
           type: array
           maxItems: 100
           items:
+            description: |
+              Information about the IP and Port exposed by the
+              Edge Cloud Platform.
+              Application Client shall use these access points to reach this
+              application instance
             type: object
             required:
               - interfaceId
@@ -1566,6 +1508,8 @@ components:
           type: array
           maxItems: 100
           items:
+            description: |
+              List of application components defined in the application descriptor.
             type: object
             required:
               - componentName
@@ -1588,6 +1532,11 @@ components:
                 type: array
                 maxItems: 100
                 items:
+                  description: |
+                    Network interface information defined in the application
+                    descriptor. Each network interface is associated with a port
+                    and protocol that will be exposed to external clients or other
+                    components within edge cloud.
                   type: object
                   required:
                     - interfaceId
@@ -1804,6 +1753,9 @@ components:
       maxItems: 2
       uniqueItems: true
       items:
+        description: |
+          Addon for the Kubernetes cluster.
+          Examples of addons include monitoring and ingress.
         type: string
         enum:
           - monitoring
@@ -1866,6 +1818,8 @@ components:
       type: array
       maxItems: 50
       items:
+        description: |
+          Additional storage resource for the application.
         type: object
         required:
           - storageSize
