@@ -924,6 +924,7 @@ components:
                       - TIMEOUT
           examples:
             GENERIC_504_TIMEOUT:
+              description: API Server Timeout
               value:
                 status: 504
                 code: TIMEOUT
