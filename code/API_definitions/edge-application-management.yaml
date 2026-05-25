@@ -2322,8 +2322,8 @@ components:
     "429":
       $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
     "500":
-        $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+      $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
     "501":
-        $ref: "../common/CAMARA_common.yaml#/components/responses/Generic501"
+      $ref: "../common/CAMARA_common.yaml#/components/responses/Generic501"
     "503":
-        $ref: "../common/CAMARA_common.yaml#/components/responses/Generic503"
+      $ref: "../common/CAMARA_common.yaml#/components/responses/Generic503"
