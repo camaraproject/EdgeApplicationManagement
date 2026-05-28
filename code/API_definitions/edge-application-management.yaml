@@ -1,8 +1,7 @@
----
 openapi: 3.0.3
 info:
   title: Edge Application Management API
-  version: wip
+  version: 0.1.0-alpha.1
   description: |
     Edge Application Management API allows API consumers to manage the
     Life Cycle of an Application and to Discover Edge Cloud Zones.
@@ -153,23 +152,16 @@ info:
     an Application on Edge Cloud.
     Edge Cloud Zones exists within a Edge Cloud Region.
     ---
-  x-camara-commonalities: 0.8.0-rc.2
+  x-camara-commonalities: 0.8.0
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-externalDocs:
-  description: Product documentation at Camara
-  url: https://github.com/camaraproject/EdgeCloud
-
 servers:
-  - url: "{apiRoot}/edge-application-management/vwip"
+  - url: '{apiRoot}/edge-application-management/v0.1alpha1'
     variables:
       apiRoot:
         default: http://localhost:9091
-        description:
-          API root, defined by the service provider, e.g. `api.example.com`
-          or `api.example.com/somepath`
-
+        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 tags:
   - name: Application
     description: Application and Application Instance Lice Cycle Management
@@ -181,6 +173,9 @@ tags:
     description: Operations for handling application instance callback notifications
   - name: App Deployment CALLBACK Operation
     description: Operations for handling application deployment callback notifications
+externalDocs:
+  description: Product documentation at Camara
+  url: https://github.com/camaraproject/EdgeCloud
 paths:
   /apps:
     post:
@@ -195,7 +190,7 @@ paths:
         instantiated in the Edge Cloud
       operationId: submitApp
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
       requestBody:
         description: |
           The Application Provider request contains mandatory
@@ -204,40 +199,40 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AppManifest"
+              $ref: '#/components/schemas/AppManifest'
         required: true
       responses:
-        "201":
+        '201':
           description: Application created successfully
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SubmittedApp"
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "403":
-          $ref: "#/components/responses/403"
-        "409":
+                $ref: '#/components/schemas/SubmittedApp'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '409':
           description: Conflict
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInfo"
+                $ref: '#/components/schemas/ErrorInfo'
               example:
                 status: 409
                 code: ALREADY_EXISTS
-                message: "App already exists"
-        "500":
-          $ref: "#/components/responses/500"
-        "501":
-          $ref: "#/components/responses/501"
-        "503":
-          $ref: "#/components/responses/503"
+                message: App already exists
+        '500':
+          $ref: '#/components/responses/Generic500'
+        '501':
+          $ref: '#/components/responses/Generic501'
+        '503':
+          $ref: '#/components/responses/Generic503'
     get:
       security:
         - openId:
@@ -250,31 +245,30 @@ paths:
         Edge Cloud Provider that the user has permission to view.
       operationId: getApps
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
       responses:
-        "200":
+        '200':
           description: List of existing applications
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
                 type: array
                 maxItems: 100
                 items:
-                  $ref: "#/components/schemas/AppManifest"
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "403":
-          $ref: "#/components/responses/403"
-        "500":
-          $ref: "#/components/responses/500"
-        "503":
-          $ref: "#/components/responses/503"
-
+                  $ref: '#/components/schemas/AppManifest'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '500':
+          $ref: '#/components/responses/Generic500'
+        '503':
+          $ref: '#/components/responses/Generic503'
   /apps/{appId}:
     get:
       security:
@@ -287,7 +281,7 @@ paths:
         Ask the Edge Cloud Provider the information for a given application
       operationId: getApp
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
         - name: appId
           description: |
             A globally unique identifier associated with the
@@ -297,32 +291,32 @@ paths:
           in: path
           required: true
           schema:
-            $ref: "#/components/schemas/AppId"
+            $ref: '#/components/schemas/AppId'
       responses:
-        "200":
+        '200':
           description: Information of Application
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   appManifest:
-                    $ref: "#/components/schemas/AppManifest"
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "403":
-          $ref: "#/components/responses/403"
-        "404":
-          $ref: "#/components/responses/404"
-        "500":
-          $ref: "#/components/responses/500"
-        "503":
-          $ref: "#/components/responses/503"
+                    $ref: '#/components/schemas/AppManifest'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '404':
+          $ref: '#/components/responses/Generic404'
+        '500':
+          $ref: '#/components/responses/Generic500'
+        '503':
+          $ref: '#/components/responses/Generic503'
     delete:
       security:
         - openId:
@@ -334,7 +328,7 @@ paths:
       description: Delete all the information and content related to an Application
       operationId: deleteApp
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
         - name: appId
           in: path
           description: |
@@ -343,38 +337,37 @@ paths:
             once the submission was successful
           required: true
           schema:
-            $ref: "#/components/schemas/AppId"
+            $ref: '#/components/schemas/AppId'
       responses:
-        "202":
+        '202':
           description: Request accepted
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
-        "204":
+              $ref: '#/components/headers/x-correlator'
+        '204':
           description: App deleted
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "403":
-          $ref: "#/components/responses/403"
-        "404":
-          $ref: "#/components/responses/404"
-        "409":
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '404':
+          $ref: '#/components/responses/Generic404'
+        '409':
           description: Conflict
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInfo"
+                $ref: '#/components/schemas/ErrorInfo'
               example:
                 status: 409
                 code: ABORTED
-                message: "App with a running application instance cannot be deleted"
-        "500":
-          $ref: "#/components/responses/500"
-        "503":
-          $ref: "#/components/responses/503"
-
+                message: App with a running application instance cannot be deleted
+        '500':
+          $ref: '#/components/responses/Generic500'
+        '503':
+          $ref: '#/components/responses/Generic503'
   /appinstances:
     post:
       security:
@@ -388,7 +381,7 @@ paths:
         Edge Cloud Zone.
       operationId: createAppInstance
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
       requestBody:
         description: |
           Information about the application and where to deploy it.
@@ -402,22 +395,22 @@ paths:
                 - edgeCloudZoneId
               properties:
                 name:
-                  $ref: "#/components/schemas/AppInstanceName"
+                  $ref: '#/components/schemas/AppInstanceName'
                 appId:
-                  $ref: "#/components/schemas/AppId"
+                  $ref: '#/components/schemas/AppId'
                 edgeCloudZoneId:
-                  $ref: "#/components/schemas/EdgeCloudZoneId"
+                  $ref: '#/components/schemas/EdgeCloudZoneId'
                 kubernetesClusterRef:
-                  $ref: "#/components/schemas/KubernetesClusterRef"
+                  $ref: '#/components/schemas/KubernetesClusterRef'
                 subscriptionRequest:
-                  $ref: "#/components/schemas/SubscriptionRequest"
+                  $ref: '#/components/schemas/SubscriptionRequest'
         required: true
       responses:
-        "202":
+        '202':
           description: Application instantiation accepted
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
             Location:
               description: Contains the URI of the newly created application.
               required: true
@@ -428,32 +421,32 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AppInstanceInfo"
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "403":
-          $ref: "#/components/responses/403"
-        "409":
+                $ref: '#/components/schemas/AppInstanceInfo'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '409':
           description: Conflict
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInfo"
+                $ref: '#/components/schemas/ErrorInfo'
               example:
                 status: 409
                 code: ALREADY_EXISTS
-                message: "Application already instantiated in the given Edge Cloud Zone"
-        "500":
-          $ref: "#/components/responses/500"
-        "501":
-          $ref: "#/components/responses/501"
-        "503":
-          $ref: "#/components/responses/503"
+                message: Application already instantiated in the given Edge Cloud Zone
+        '500':
+          $ref: '#/components/responses/Generic500'
+        '501':
+          $ref: '#/components/responses/Generic501'
+        '503':
+          $ref: '#/components/responses/Generic503'
       callbacks:
         onAppInstanceStatusChange:
-          $ref: "#/components/callbacks/onAppInstanceStatusChange"
+          $ref: '#/components/callbacks/onAppInstanceStatusChange'
     get:
       security:
         - openId:
@@ -466,7 +459,7 @@ paths:
         given application
       operationId: getAppInstance
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
         - name: appId
           description: |
             A globally unique identifier associated with
@@ -476,7 +469,7 @@ paths:
           in: query
           required: false
           schema:
-            $ref: "#/components/schemas/AppId"
+            $ref: '#/components/schemas/AppId'
         - name: appInstanceId
           description: |
             A globally unique identifier associated with a running
@@ -485,7 +478,7 @@ paths:
           in: query
           required: false
           schema:
-            $ref: "#/components/schemas/AppInstanceId"
+            $ref: '#/components/schemas/AppInstanceId'
         - name: region
           description: |
             Human readable name of the geographical Edge Cloud Region of
@@ -493,33 +486,33 @@ paths:
           in: query
           required: false
           schema:
-            $ref: "#/components/schemas/EdgeCloudRegion"
+            $ref: '#/components/schemas/EdgeCloudRegion'
       responses:
-        "200":
+        '200':
           description: |
             List of application instances. Returns an empty list if no
             instances were found or none match the specified query
             parameters.
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
                 type: array
                 maxItems: 100
                 items:
-                  $ref: "#/components/schemas/AppInstanceInfo"
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "403":
-          $ref: "#/components/responses/403"
-        "500":
-          $ref: "#/components/responses/500"
-        "503":
-          $ref: "#/components/responses/503"
+                  $ref: '#/components/schemas/AppInstanceInfo'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '500':
+          $ref: '#/components/responses/Generic500'
+        '503':
+          $ref: '#/components/responses/Generic503'
   /appinstances/{appInstanceId}:
     delete:
       security:
@@ -533,7 +526,7 @@ paths:
         an Edge Cloud Zone
       operationId: deleteAppInstance
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
         - name: appInstanceId
           in: path
           description: |
@@ -541,30 +534,29 @@ paths:
             that will be terminated
           required: true
           schema:
-            $ref: "#/components/schemas/AppInstanceId"
+            $ref: '#/components/schemas/AppInstanceId'
       responses:
-        "202":
+        '202':
           description: |
             Request accepted to be processed. It applies for async
             deletion process
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
-        "204":
+              $ref: '#/components/headers/x-correlator'
+        '204':
           description: Application Instance Deleted
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "403":
-          $ref: "#/components/responses/403"
-        "404":
-          $ref: "#/components/responses/404"
-        "500":
-          $ref: "#/components/responses/500"
-        "503":
-          $ref: "#/components/responses/503"
-
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '404':
+          $ref: '#/components/responses/Generic404'
+        '500':
+          $ref: '#/components/responses/Generic500'
+        '503':
+          $ref: '#/components/responses/Generic503'
   /deployments:
     post:
       security:
@@ -578,7 +570,7 @@ paths:
         Edge Cloud Zones.
       operationId: createAppDeployment
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
       requestBody:
         description: |
           Information about the application and where to deploy it.
@@ -592,60 +584,60 @@ paths:
                 - edgeCloudZones
               properties:
                 appDeploymentName:
-                  $ref: "#/components/schemas/AppDeploymentName"
+                  $ref: '#/components/schemas/AppDeploymentName'
                 appId:
-                  $ref: "#/components/schemas/AppId"
+                  $ref: '#/components/schemas/AppId'
                 edgeCloudZones:
                   type: array
                   maxItems: 100
                   items:
-                    $ref: "#/components/schemas/EdgeCloudZoneId"
+                    $ref: '#/components/schemas/EdgeCloudZoneId'
                 kubernetesClusterRefs:
                   type: array
                   maxItems: 100
                   items:
-                    $ref: "#/components/schemas/KubernetesClusterRef"
+                    $ref: '#/components/schemas/KubernetesClusterRef'
                 subscriptionRequest:
-                  $ref: "#/components/schemas/SubscriptionRequest"
+                  $ref: '#/components/schemas/SubscriptionRequest'
         required: true
       responses:
-        "202":
+        '202':
           description: Application deployment accepted
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   appDeploymentId:
-                    $ref: "#/components/schemas/AppDeploymentId"
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "403":
-          $ref: "#/components/responses/403"
-        "409":
+                    $ref: '#/components/schemas/AppDeploymentId'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '409':
           description: Conflict
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInfo"
+                $ref: '#/components/schemas/ErrorInfo'
               example:
                 status: 409
                 code: ALREADY_EXISTS
-                message: "Deployment already exists"
-        "500":
-          $ref: "#/components/responses/500"
-        "501":
-          $ref: "#/components/responses/501"
-        "503":
-          $ref: "#/components/responses/503"
+                message: Deployment already exists
+        '500':
+          $ref: '#/components/responses/Generic500'
+        '501':
+          $ref: '#/components/responses/Generic501'
+        '503':
+          $ref: '#/components/responses/Generic503'
       callbacks:
         onAppDeploymentStatusChange:
-          $ref: "#/components/callbacks/onAppDeploymentStatusChange"
+          $ref: '#/components/callbacks/onAppDeploymentStatusChange'
     get:
       security:
         - openId:
@@ -658,7 +650,7 @@ paths:
         given application
       operationId: getAppDeployments
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
         - name: appId
           description: |
             A globally unique identifier associated with
@@ -668,7 +660,7 @@ paths:
           in: query
           required: false
           schema:
-            $ref: "#/components/schemas/AppId"
+            $ref: '#/components/schemas/AppId'
         - name: appDeploymentId
           description: |
             A globally unique identifier associated with a existing deployment
@@ -677,35 +669,35 @@ paths:
           in: query
           required: false
           schema:
-            $ref: "#/components/schemas/AppDeploymentId"
+            $ref: '#/components/schemas/AppDeploymentId'
       responses:
-        "200":
+        '200':
           description: |
             List of application deployments. Returns an empty list if no
             deployments were found or none match the specified query
             parameters.
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
                 type: array
                 maxItems: 100
                 items:
-                  $ref: "#/components/schemas/AppDeploymentInfo"
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "403":
-          $ref: "#/components/responses/403"
-        "410":
-          $ref: "#/components/responses/410"
-        "500":
-          $ref: "#/components/responses/500"
-        "503":
-          $ref: "#/components/responses/503"
+                  $ref: '#/components/schemas/AppDeploymentInfo'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '410':
+          $ref: '#/components/responses/Generic410'
+        '500':
+          $ref: '#/components/responses/Generic500'
+        '503':
+          $ref: '#/components/responses/Generic503'
   /deployments/{appDeploymentId}:
     delete:
       security:
@@ -718,7 +710,7 @@ paths:
         Delete a deployment terminating all related instances of an application
       operationId: deleteAppDeployment
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
         - name: appDeploymentId
           in: path
           description: |
@@ -726,29 +718,29 @@ paths:
             that will be terminated
           required: true
           schema:
-            $ref: "#/components/schemas/AppDeploymentId"
+            $ref: '#/components/schemas/AppDeploymentId'
       responses:
-        "202":
+        '202':
           description: |
             Request accepted to be processed. It applies for async
             deletion process
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "403":
-          $ref: "#/components/responses/403"
-        "404":
-          $ref: "#/components/responses/404"
-        "410":
-          $ref: "#/components/responses/410"
-        "500":
-          $ref: "#/components/responses/500"
-        "503":
-          $ref: "#/components/responses/503"
+              $ref: '#/components/headers/x-correlator'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '404':
+          $ref: '#/components/responses/Generic404'
+        '410':
+          $ref: '#/components/responses/Generic410'
+        '500':
+          $ref: '#/components/responses/Generic500'
+        '503':
+          $ref: '#/components/responses/Generic503'
     patch:
       security:
         - openId:
@@ -767,14 +759,14 @@ paths:
         This operation may include changing the deployment name, target Edge Cloud Zones, or other updatable fields.
       operationId: updateAppDeployment
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
         - name: appDeploymentId
           in: path
           description: |
             Identifier of the specific application deployment to be updated.
           required: true
           schema:
-            $ref: "#/components/schemas/AppDeploymentId"
+            $ref: '#/components/schemas/AppDeploymentId'
       requestBody:
         description: |
           The fields to update for the application deployment using JSON Merge Patch (RFC 7396).
@@ -790,17 +782,17 @@ paths:
               type: object
               properties:
                 appDeploymentName:
-                  $ref: "#/components/schemas/AppDeploymentName"
+                  $ref: '#/components/schemas/AppDeploymentName'
                 edgeCloudZones:
                   type: array
                   maxItems: 100
                   items:
-                    $ref: "#/components/schemas/EdgeCloudZoneId"
+                    $ref: '#/components/schemas/EdgeCloudZoneId'
                 kubernetesClusterRefs:
                   type: array
                   maxItems: 100
                   items:
-                    $ref: "#/components/schemas/KubernetesClusterRef"
+                    $ref: '#/components/schemas/KubernetesClusterRef'
             examples:
               updateDeploymentName:
                 summary: Update only the deployment name
@@ -808,7 +800,7 @@ paths:
                   This example shows how to update only the deployment name.
                   Other fields will remain unchanged.
                 value:
-                  appDeploymentName: "my_updated_deployment"
+                  appDeploymentName: my_updated_deployment
               updateMultipleFields:
                 summary: Update multiple fields simultaneously
                 description: |
@@ -816,13 +808,13 @@ paths:
                   and Edge Cloud Zones in a single request. Remember that both
                   array fields will be completely replaced with the new values.
                 value:
-                  appDeploymentName: "production_deployment"
+                  appDeploymentName: production_deployment
                   edgeCloudZones:
-                    - "123e4567-e89b-12d3-a456-426614174000"
-                    - "123e4567-e89b-12d3-a456-426614174001"
+                    - 123e4567-e89b-12d3-a456-426614174000
+                    - 123e4567-e89b-12d3-a456-426614174001
                   kubernetesClusterRefs:
-                    - "642f6105-7015-4af1-a4d1-e1ecb8437abc"
-                    - "642f6105-7015-4af1-a4d1-e1ecb8437def"
+                    - 642f6105-7015-4af1-a4d1-e1ecb8437abc
+                    - 642f6105-7015-4af1-a4d1-e1ecb8437def
               arrayReplacementExample:
                 summary: Example of array replacement behavior
                 description: |
@@ -842,43 +834,42 @@ paths:
                   To add a single zone while keeping existing ones, ALL zones must be included in the request.
                 value:
                   edgeCloudZones:
-                    - "123e4567-e89b-12d3-a456-426614174000"
-                    - "123e4567-e89b-12d3-a456-426614174003"
+                    - 123e4567-e89b-12d3-a456-426614174000
+                    - 123e4567-e89b-12d3-a456-426614174003
       responses:
-        "200":
+        '200':
           description: Application deployment updated successfully
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AppDeploymentInfo"
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "403":
-          $ref: "#/components/responses/403"
-        "404":
-          $ref: "#/components/responses/404"
-        "410":
-          $ref: "#/components/responses/410"
-        "409":
+                $ref: '#/components/schemas/AppDeploymentInfo'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '404':
+          $ref: '#/components/responses/Generic404'
+        '409':
           description: Conflict
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInfo"
+                $ref: '#/components/schemas/ErrorInfo'
               example:
                 status: 409
                 code: ABORTED
-                message: "Update conflict"
-        "500":
-          $ref: "#/components/responses/500"
-        "503":
-          $ref: "#/components/responses/503"
-
+                message: Update conflict
+        '410':
+          $ref: '#/components/responses/Generic410'
+        '500':
+          $ref: '#/components/responses/Generic500'
+        '503':
+          $ref: '#/components/responses/Generic503'
   /clusters:
     get:
       security:
@@ -893,7 +884,7 @@ paths:
         List available cluster information
       operationId: getClusters
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
         - name: region
           description: |
             Human readable name of the geographical Edge Cloud Region of
@@ -901,47 +892,47 @@ paths:
           in: query
           required: false
           schema:
-            $ref: "#/components/schemas/EdgeCloudRegion"
+            $ref: '#/components/schemas/EdgeCloudRegion'
         - name: clusterRef
           description: |
             A globally unique identifier for the Cluster.
           in: query
           required: false
           schema:
-            $ref: "#/components/schemas/KubernetesClusterRef"
+            $ref: '#/components/schemas/KubernetesClusterRef'
         - name: edgeCloudZoneId
           description: |
             Edge Cloud Zone identifier.
           in: query
           required: false
           schema:
-            $ref: "#/components/schemas/EdgeCloudZoneId"
+            $ref: '#/components/schemas/EdgeCloudZoneId'
       responses:
-        "200":
+        '200':
           description: |
             Successful response, returning the cluster's information.
             Returns an empty list if no clusters were found or none match
             the specified query parameters.
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
                 type: array
                 maxItems: 100
                 items:
-                  $ref: "#/components/schemas/ClusterInfo"
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "403":
-          $ref: "#/components/responses/403"
-        "500":
-          $ref: "#/components/responses/500"
-        "503":
-          $ref: "#/components/responses/503"
+                  $ref: '#/components/schemas/ClusterInfo'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '500':
+          $ref: '#/components/responses/Generic500'
+        '503':
+          $ref: '#/components/responses/Generic503'
   /edge-cloud-zones:
     get:
       security:
@@ -956,7 +947,7 @@ paths:
         status (active/inactive/unknown)
       operationId: getEdgeCloudZones
       parameters:
-        - $ref: "#/components/parameters/x-correlator"
+        - $ref: '#/components/parameters/x-correlator'
         - name: region
           description: |
             Human readable name of the geographical Edge Cloud Region of
@@ -964,35 +955,35 @@ paths:
           in: query
           required: false
           schema:
-            $ref: "#/components/schemas/EdgeCloudRegion"
+            $ref: '#/components/schemas/EdgeCloudRegion'
         - name: status
           description: Human readable status of the Edge Cloud Zone
           in: query
           required: false
           schema:
-            $ref: "#/components/schemas/EdgeCloudZoneStatus"
+            $ref: '#/components/schemas/EdgeCloudZoneStatus'
       responses:
-        "200":
+        '200':
           description: |
             Successful response, returning the
             Available Edge Cloud Zones.
           headers:
             x-correlator:
-              $ref: "#/components/headers/x-correlator"
+              $ref: '#/components/headers/x-correlator'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EdgeCloudZones"
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "403":
-          $ref: "#/components/responses/403"
-        "500":
-          $ref: "#/components/responses/500"
-        "503":
-          $ref: "#/components/responses/503"
+                $ref: '#/components/schemas/EdgeCloudZones'
+        '400':
+          $ref: '#/components/responses/Generic400'
+        '401':
+          $ref: '#/components/responses/Generic401'
+        '403':
+          $ref: '#/components/responses/Generic403'
+        '500':
+          $ref: '#/components/responses/Generic500'
+        '503':
+          $ref: '#/components/responses/Generic503'
 components:
   securitySchemes:
     openId:
@@ -1002,7 +993,7 @@ components:
     notificationsBearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: "{$request.body#/sinkCredential.credentialType}"
+      bearerFormat: '{$request.body#/sinkCredential.credentialType}'
       description: |
         Bearer token for notification delivery. Token format is determined
         by `sinkCredential.credentialType` in the subscription request.
@@ -1013,24 +1004,25 @@ components:
       description: |
         Correlation id for the different services
       schema:
-        $ref: "#/components/schemas/XCorrelator"
+        $ref: '#/components/schemas/x-correlator'
   headers:
     x-correlator:
       description: |
         Correlation id for the different services
       required: false
       schema:
-        $ref: "#/components/schemas/XCorrelator"
-
+        $ref: '#/components/schemas/x-correlator'
+    x-correlator-2:
+      description: Correlation id for the different services
+      schema:
+        $ref: '#/components/schemas/XCorrelator-2'
   callbacks:
     onAppInstanceStatusChange:
-      "{$request.body#/subscriptionRequest/sink}":
+      '{$request.body#/subscriptionRequest/sink}':
         post:
           tags:
             - App Instance CALLBACK Operation
-          summary:
-            Provide a notification for a change in status of the instantiated
-            application
+          summary: Provide a notification for a change in status of the instantiated application
           description: |
             Instantiating an application is an asynchronous task. After the application status changes,
             the server will return a callback response at the specified URL.
@@ -1038,7 +1030,7 @@ components:
             **WARNING**: This callback endpoint must be exposed on the listener side as `POST {$request.body#/subscriptionRequest/sink}`
           operationId: EdgeApplicationManagementCallback
           parameters:
-            - $ref: "#/components/parameters/x-correlator"
+            - $ref: '#/components/parameters/x-correlator'
           security:
             - {}
             - notificationsBearerAuth: []
@@ -1048,31 +1040,29 @@ components:
             content:
               application/cloudevents+json:
                 schema:
-                  $ref: "#/components/schemas/CloudEvent"
+                  $ref: '#/components/schemas/CloudEvent'
           responses:
-            "204":
+            '204':
               description: Successful notification - No Content
               headers:
                 x-correlator:
-                  $ref: "#/components/headers/x-correlator"
-            "400":
-              $ref: "#/components/responses/400"
-            "401":
-              $ref: "#/components/responses/401"
-            "403":
-              $ref: "#/components/responses/403"
-            "410":
-              $ref: "#/components/responses/410"
-            "429":
-              $ref: "#/components/responses/429"
-
+                  $ref: '#/components/headers/x-correlator'
+            '400':
+              $ref: '#/components/responses/Generic400'
+            '401':
+              $ref: '#/components/responses/Generic401'
+            '403':
+              $ref: '#/components/responses/Generic403'
+            '410':
+              $ref: '#/components/responses/Generic410'
+            '429':
+              $ref: '#/components/responses/Generic429'
     onAppDeploymentStatusChange:
-      "{$request.body#/subscriptionRequest/sink}":
+      '{$request.body#/subscriptionRequest/sink}':
         post:
           tags:
             - App Deployment CALLBACK Operation
-          summary: Provide a notification for a change in status of the deployed
-            application
+          summary: Provide a notification for a change in status of the deployed application
           description: |
             Deploying an application is an asynchronous task. After the application deployment status changes,
             the server will return a callback response at the specified URL.
@@ -1080,7 +1070,7 @@ components:
             **WARNING**: This callback endpoint must be exposed on the listener side as `POST {$request.body#/subscriptionRequest/sink}`
           operationId: EdgeApplicationManagementDeploymentCallback
           parameters:
-            - $ref: "#/components/parameters/x-correlator"
+            - $ref: '#/components/parameters/x-correlator'
           security:
             - {}
             - notificationsBearerAuth: []
@@ -1093,39 +1083,33 @@ components:
                   type: array
                   maxItems: 100
                   items:
-                    $ref: "#/components/schemas/CloudEvent"
+                    $ref: '#/components/schemas/CloudEvent'
           responses:
-            "204":
+            '204':
               description: Successful notification - No Content
               headers:
                 x-correlator:
-                  $ref: "#/components/headers/x-correlator"
-            "400":
-              $ref: "#/components/responses/400"
-            "401":
-              $ref: "#/components/responses/401"
-            "403":
-              $ref: "#/components/responses/403"
-            "410":
-              $ref: "#/components/responses/410"
-            "429":
-              $ref: "#/components/responses/429"
-
+                  $ref: '#/components/headers/x-correlator'
+            '400':
+              $ref: '#/components/responses/Generic400'
+            '401':
+              $ref: '#/components/responses/Generic401'
+            '403':
+              $ref: '#/components/responses/Generic403'
+            '410':
+              $ref: '#/components/responses/Generic410'
+            '429':
+              $ref: '#/components/responses/Generic429'
   schemas:
     AccessTokenCredential:
       type: object
-      description:
-        An access token credential. This type of credential is meant to be
-        used by API Consumers that have limited capabilities to handle
-        authorization requests.
+      description: An access token credential. This type of credential is meant to be used by API Consumers that have limited capabilities to handle authorization requests.
       allOf:
-        - $ref: "#/components/schemas/SinkCredential"
+        - $ref: '#/components/schemas/SinkCredential'
         - type: object
           properties:
             accessToken:
-              description:
-                Access Token granting access to the POST operation to create
-                notification
+              description: Access Token granting access to the POST operation to create notification
               type: string
               maxLength: 8192
             accessTokenExpiresUtc:
@@ -1139,7 +1123,7 @@ components:
                 existence. If the token expires while the resource is still active, the client
                 will stop receiving notifications. It must
                 follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
-              example: "2023-07-03T12:27:08.312Z"
+              example: '2023-07-03T12:27:08.312Z'
             accessTokenType:
               description: Type of access token - MUST be set to bearer for now
               type: string
@@ -1149,10 +1133,48 @@ components:
             - accessToken
             - accessTokenExpiresUtc
             - accessTokenType
-
     CloudEvent:
-      $ref: "../common/CAMARA_event_common.yaml#/components/schemas/CloudEvent"
-
+      type: object
+      description: |
+        CloudEvents 1.0 specification envelope.
+        This schema is the stable base for all CAMARA event notifications.
+        It imposes no constraints on `type` values or `data` structure —
+        those concerns belong to the API-specific and lifecycle group schemas.
+      required:
+        - id
+        - source
+        - specversion
+        - type
+        - time
+      properties:
+        id:
+          type: string
+          maxLength: 256
+          description: Identifier of this event, unique within the source context.
+        source:
+          $ref: '#/components/schemas/Source'
+        type:
+          type: string
+          maxLength: 512
+          description: |
+            Identifies the event type. CAMARA APIs use reverse-DNS notation:
+            `org.camaraproject.<api-name>.<event-version>.<event-name>`
+            The api-name segment makes each type globally unique across API groups.
+        specversion:
+          type: string
+          description: Version of the specification to which this event conforms (must be 1.0 if it conforms to cloudevents 1.0.2 version)
+          enum:
+            - '1.0'
+        datacontenttype:
+          type: string
+          description: media-type that describes the event payload encoding, must be "application/json" for CAMARA APIs
+          enum:
+            - application/json
+        data:
+          type: object
+          description: Event details payload. Structure is defined by each concrete event schema.
+        time:
+          $ref: '#/components/schemas/DateTime'
     SubscriptionEventType:
       type: string
       description: |
@@ -1161,11 +1183,8 @@ components:
         - org.camaraproject.edge-application-management.v0.app-instance-status-change
         - org.camaraproject.edge-application-management.v0.app-deployment-status-change
         - org.camaraproject.edge-application-management.v0.subscription-ended
-
     SubscriptionRequest:
-      description:
-        The request for creating an event-type event subscription (implicit
-        subscription, HTTP only)
+      description: The request for creating an event-type event subscription (implicit subscription, HTTP only)
       type: object
       required:
         - sink
@@ -1175,12 +1194,10 @@ components:
           format: uri
           pattern: ^https:\/\/.+$
           maxLength: 2048
-          description:
-            The address to which events shall be delivered using the selected
-            protocol.
-          example: "https://endpoint.example.com/sink"
+          description: The address to which events shall be delivered using the selected protocol.
+          example: https://endpoint.example.com/sink
         sinkCredential:
-          $ref: "#/components/schemas/SinkCredential"
+          $ref: '#/components/schemas/SinkCredential'
         types:
           description: |
             Camara Event types eligible to be delivered by this subscription.
@@ -1189,10 +1206,9 @@ components:
           minItems: 1
           maxItems: 1
           items:
-            $ref: "#/components/schemas/SubscriptionEventType"
+            $ref: '#/components/schemas/SubscriptionEventType'
         config:
-          $ref: "#/components/schemas/SubscriptionConfig"
-
+          $ref: '#/components/schemas/SubscriptionConfig'
     SubscriptionConfig:
       description: |
         Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
@@ -1210,19 +1226,12 @@ components:
           type: string
           maxLength: 64
           format: date-time
-          example: 2023-01-17T13:18:23.682Z
-          description:
-            The subscription expiration time (in date-time format) requested by
-            the API consumer. It must follow [RFC
-            3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and
-            must have time zone.
+          example: '2023-01-17T13:18:23.682Z'
+          description: The subscription expiration time (in date-time format) requested by the API consumer. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
         subscriptionMaxEvents:
           type: integer
           format: int32
-          description:
-            Identifies the maximum number of event reports to be generated
-            (>=1) requested by the API consumer - Once this number is reached,
-            the subscription ends.
+          description: Identifies the maximum number of event reports to be generated (>=1) requested by the API consumer - Once this number is reached, the subscription ends.
           minimum: 1
           maximum: 2147483647
           example: 5
@@ -1231,10 +1240,8 @@ components:
           description: |
             Set to `true` by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request.
             Example: If initialEvent is set to true and application is in a specific status, an event is triggered.
-
     SinkCredential:
-      description: A sink credential provides authentication or authorization
-        information necessary to enable delivery of events to a target.
+      description: A sink credential provides authentication or authorization information necessary to enable delivery of events to a target.
       type: object
       required:
         - credentialType
@@ -1247,8 +1254,7 @@ components:
       discriminator:
         propertyName: credentialType
         mapping:
-          ACCESSTOKEN: "#/components/schemas/AccessTokenCredential"
-
+          ACCESSTOKEN: '#/components/schemas/AccessTokenCredential'
     AccessEndpoint:
       type: object
       description: |
@@ -1265,24 +1271,23 @@ components:
             - ipv6Addresses
       properties:
         port:
-          $ref: "#/components/schemas/Port"
+          $ref: '#/components/schemas/Port'
         fqdn:
-          $ref: "#/components/schemas/Fqdn"
+          $ref: '#/components/schemas/Fqdn'
         ipv4Addresses:
           description: IP version 4 of an application instance
           type: array
           items:
-            $ref: "#/components/schemas/Ipv4Addr"
+            $ref: '#/components/schemas/Ipv4Addr'
           minItems: 1
           maxItems: 16
         ipv6Addresses:
           description: IP version 6 of an application instance.
           type: array
           items:
-            $ref: "#/components/schemas/Ipv6Addr"
+            $ref: '#/components/schemas/Ipv6Addr'
           minItems: 1
           maxItems: 16
-
     AppId:
       type: string
       format: uuid
@@ -1293,7 +1298,6 @@ components:
         A globally unique identifier associated with the application.
         Edge Cloud Platform generates this identifier when the
         Application is submitted.
-
     AppInstanceId:
       type: string
       format: uuid
@@ -1305,7 +1309,6 @@ components:
         instance of an application.
         Edge Cloud Platform generates this identifier when the
         instantiation in the Edge Cloud Zone is successful.
-
     AppDeploymentId:
       type: string
       format: uuid
@@ -1316,7 +1319,6 @@ components:
         A globally unique identifier associated with a existing deployment
         of an application. Edge Cloud Platform generates this identifier when
         the deployment request in the Edge Cloud Zone is successful.
-
     AppDeploymentInfo:
       description: Information about the application deployment.
       type: object
@@ -1328,26 +1330,25 @@ components:
         - appInstances
       properties:
         appDeploymentName:
-          $ref: "#/components/schemas/AppDeploymentName"
+          $ref: '#/components/schemas/AppDeploymentName'
         appDeploymentId:
-          $ref: "#/components/schemas/AppDeploymentId"
+          $ref: '#/components/schemas/AppDeploymentId'
         appId:
-          $ref: "#/components/schemas/AppId"
+          $ref: '#/components/schemas/AppId'
         edgeCloudZones:
           description: |
             List of Edge Cloud Zones where the application is deployed.
           type: array
           maxItems: 100
           items:
-            $ref: "#/components/schemas/EdgeCloudZoneId"
+            $ref: '#/components/schemas/EdgeCloudZoneId'
         appInstances:
           description: |
             List of application instances created as part of this deployment.
           type: array
           maxItems: 100
           items:
-            $ref: "#/components/schemas/AppInstanceId"
-
+            $ref: '#/components/schemas/AppInstanceId'
     AppInstanceInfo:
       description: Information about the application instance.
       type: object
@@ -1359,13 +1360,13 @@ components:
         - edgeCloudZoneId
       properties:
         name:
-          $ref: "#/components/schemas/AppInstanceName"
+          $ref: '#/components/schemas/AppInstanceName'
         appId:
-          $ref: "#/components/schemas/AppId"
+          $ref: '#/components/schemas/AppId'
         appInstanceId:
-          $ref: "#/components/schemas/AppInstanceId"
+          $ref: '#/components/schemas/AppInstanceId'
         appProvider:
-          $ref: "#/components/schemas/AppProvider"
+          $ref: '#/components/schemas/AppProvider'
         status:
           description: Status of the application instance (default is 'unknown')
           type: string
@@ -1396,27 +1397,24 @@ components:
               - accessPoints
             properties:
               interfaceId:
-                $ref: "#/components/schemas/InterfaceId"
+                $ref: '#/components/schemas/InterfaceId'
               accessPoints:
-                $ref: "#/components/schemas/AccessEndpoint"
+                $ref: '#/components/schemas/AccessEndpoint'
           minItems: 1
         kubernetesClusterRef:
-          $ref: "#/components/schemas/KubernetesClusterRef"
+          $ref: '#/components/schemas/KubernetesClusterRef'
         edgeCloudZoneId:
-          $ref: "#/components/schemas/EdgeCloudZoneId"
-
+          $ref: '#/components/schemas/EdgeCloudZoneId'
     AppInstanceName:
       type: string
       maxLength: 64
       pattern: ^[A-Za-z][A-Za-z0-9_]{1,63}$
       description: Name of the App instance, scoped to the AppProvider
-
     AppDeploymentName:
       type: string
       maxLength: 64
       pattern: ^[A-Za-z][A-Za-z0-9_]{1,63}$
       description: Name of the App Deployment, scoped to the AppProvider
-
     AppManifest:
       type: object
       description: |
@@ -1424,14 +1422,14 @@ components:
         Application Provider
       properties:
         appId:
-          $ref: "#/components/schemas/AppId"
+          $ref: '#/components/schemas/AppId'
         name:
           type: string
           maxLength: 64
           pattern: ^[A-Za-z][A-Za-z0-9_]{1,63}$
           description: Name of the application.
         appProvider:
-          $ref: "#/components/schemas/AppProvider"
+          $ref: '#/components/schemas/AppProvider'
         version:
           type: string
           maxLength: 64
@@ -1446,7 +1444,7 @@ components:
             - HELM
             - CSAR
         operatingSystem:
-          $ref: "#/components/schemas/OperatingSystem"
+          $ref: '#/components/schemas/OperatingSystem'
         appRepo:
           description: |
             Repository where Application Provider stores the application image
@@ -1469,7 +1467,7 @@ components:
                 recommended to be the personal access token created by developer
                 e.g. in Github repo.
             imagePath:
-              $ref: "#/components/schemas/Uri"
+              $ref: '#/components/schemas/Uri'
             userName:
               type: string
               maxLength: 64
@@ -1501,7 +1499,7 @@ components:
                 MD5 checksum for VM and file-based images, sha256
                 digest for containers
         requiredResources:
-          $ref: "#/components/schemas/RequiredResources"
+          $ref: '#/components/schemas/RequiredResources'
         componentSpec:
           description: |
             Information defined in "appRepo" point to the application
@@ -1553,7 +1551,7 @@ components:
                     - visibilityType
                   properties:
                     interfaceId:
-                      $ref: "#/components/schemas/InterfaceId"
+                      $ref: '#/components/schemas/InterfaceId'
                     protocol:
                       type: string
                       enum:
@@ -1564,7 +1562,7 @@ components:
                         Defines the IP transport communication
                         protocol i.e., TCP, UDP or ANY
                     port:
-                      $ref: "#/components/schemas/Port"
+                      $ref: '#/components/schemas/Port'
                     visibilityType:
                       description: |
                         Defines whether the interface is exposed
@@ -1588,13 +1586,11 @@ components:
         - appRepo
         - requiredResources
         - componentSpec
-
     AppProvider:
       type: string
       maxLength: 64
       pattern: ^[A-Za-z][A-Za-z0-9_]{7,63}$
       description: Human readable name of the Application Provider.
-
     ClusterInfo:
       type: object
       description: Kubernetes cluster information
@@ -1610,13 +1606,13 @@ components:
           description: |
             Name of the Cluster, scoped to the Provider
         provider:
-          $ref: "#/components/schemas/AppProvider"
+          $ref: '#/components/schemas/AppProvider'
         clusterRef:
-          $ref: "#/components/schemas/KubernetesClusterRef"
+          $ref: '#/components/schemas/KubernetesClusterRef'
         edgeCloudZoneId:
-          $ref: "#/components/schemas/EdgeCloudZoneId"
+          $ref: '#/components/schemas/EdgeCloudZoneId'
         edgeCloudRegion:
-          $ref: "#/components/schemas/EdgeCloudRegion"
+          $ref: '#/components/schemas/EdgeCloudRegion'
         version:
           type: string
           maxLength: 64
@@ -1626,31 +1622,27 @@ components:
           type: array
           maxItems: 100
           items:
-            $ref: "#/components/schemas/KubernetesNodePool"
+            $ref: '#/components/schemas/KubernetesNodePool'
           minItems: 1
-
     EdgeCloudProvider:
       type: string
       maxLength: 64
       description: Human readable name of the Edge Cloud Provider.
-
     EdgeCloudRegion:
       type: string
       maxLength: 64
       description: |
         Human readable name of the geographical Edge Cloud Region of
         the Edge Cloud. Defined by the Edge Cloud Provider.
-
     EdgeCloudZones:
       type: array
       items:
-        $ref: "#/components/schemas/EdgeCloudZone"
+        $ref: '#/components/schemas/EdgeCloudZone'
       minItems: 1
       maxItems: 100
       description: |
         A collection of Edge Cloud Zones where the Application Provider can
         instantiate an Application Instance.
-
     EdgeCloudZoneId:
       type: string
       format: uuid
@@ -1660,7 +1652,6 @@ components:
       description: |
         Unique identifier created by the Edge Cloud Platform to identify an
         Edge Cloud Zone within an Edge Cloud.
-
     EdgeCloudZone:
       type: object
       description: |
@@ -1675,23 +1666,21 @@ components:
         - edgeCloudProvider
       properties:
         edgeCloudZoneId:
-          $ref: "#/components/schemas/EdgeCloudZoneId"
+          $ref: '#/components/schemas/EdgeCloudZoneId'
         edgeCloudZoneName:
-          $ref: "#/components/schemas/EdgeCloudZoneName"
+          $ref: '#/components/schemas/EdgeCloudZoneName'
         edgeCloudZoneStatus:
-          $ref: "#/components/schemas/EdgeCloudZoneStatus"
+          $ref: '#/components/schemas/EdgeCloudZoneStatus'
         edgeCloudProvider:
-          $ref: "#/components/schemas/EdgeCloudProvider"
+          $ref: '#/components/schemas/EdgeCloudProvider'
         edgeCloudRegion:
-          $ref: "#/components/schemas/EdgeCloudRegion"
-
+          $ref: '#/components/schemas/EdgeCloudRegion'
     EdgeCloudZoneName:
       type: string
       maxLength: 64
       description: |
         Human readable name of the geographical zone of
         the Edge Cloud. Defined by the Edge Cloud Provider.
-
     EdgeCloudZoneStatus:
       description: Status of the Edge Cloud Zone (default is 'unknown')
       type: string
@@ -1700,16 +1689,33 @@ components:
         - inactive
         - unknown
       default: unknown
-
     ErrorInfo:
-      $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
-
+      type: object
+      description: A structured error response providing details about a failed request, including the HTTP status code, an error code, and a human-readable message
+      required:
+        - status
+        - code
+        - message
+      properties:
+        status:
+          type: integer
+          format: int32
+          minimum: 100
+          maximum: 599
+          description: HTTP response status code
+        code:
+          type: string
+          maxLength: 96
+          description: A human-readable code to describe the error
+        message:
+          type: string
+          maxLength: 512
+          description: A human-readable description of what the event represents
     Fqdn:
       type: string
       maxLength: 253
       description: |
         Full qualified domain name of an application instance
-
     GpuInfo:
       type: object
       description: Information about the supported GPUs
@@ -1729,7 +1735,6 @@ components:
           minimum: 0
           maximum: 16
           description: Number of GPUs
-
     K8sAddons:
       description: |
         Addons for the Kubernetes cluster.
@@ -1746,7 +1751,6 @@ components:
         enum:
           - monitoring
           - ingress
-
     K8sNetworking:
       description: |
         Kubernetes networking definition
@@ -1767,7 +1771,7 @@ components:
               description: CNI provider version
               type: string
               maxLength: 64
-              example: "1.13"
+              example: '1.13'
         additionalNetworks:
           description: Additional Networks for the Kubernetes cluster.
           type: array
@@ -1798,7 +1802,6 @@ components:
                   - netdevice
                   - vfio-pci
                   - interface
-
     AdditionalStorage:
       description: Additional storage for the application.
       type: array
@@ -1827,7 +1830,6 @@ components:
             maxLength: 64
             description: Location of additional storage resource.
             example: /logs
-
     Vcpu:
       type: string
       maxLength: 16
@@ -1835,8 +1837,7 @@ components:
       description: |
         Number of vcpus in whole (i.e 1), decimal (i.e 0.500) up to
         millivcpu, or millivcpu (i.e 500m) format.
-      example: "500m"
-
+      example: 500m
     KubernetesClusterRef:
       description: |
         A global unique identifier associated with a Kubernetes cluster
@@ -1846,8 +1847,7 @@ components:
       pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
       minLength: 36
       maxLength: 36
-      example: "642f6105-7015-4af1-a4d1-e1ecb8437abc"
-
+      example: 642f6105-7015-4af1-a4d1-e1ecb8437abc
     KubernetesNodePool:
       type: object
       description: |
@@ -1899,7 +1899,6 @@ components:
               minimum: 1
               maximum: 16384
               example: 4096
-
     KubernetesResources:
       type: object
       description: Definition of Kubernetes Cluster Infrastructure.
@@ -2086,7 +2085,7 @@ components:
           type: string
           maxLength: 64
           description: Minimum Kubernetes Version.
-          example: "1.29"
+          example: '1.29'
         additionalStorage:
           type: string
           maxLength: 32
@@ -2095,10 +2094,9 @@ components:
           example: 80GB
           pattern: ^\d+(GB|MB)$
         networking:
-          $ref: "#/components/schemas/K8sNetworking"
+          $ref: '#/components/schemas/K8sNetworking'
         addons:
-          $ref: "#/components/schemas/K8sAddons"
-
+          $ref: '#/components/schemas/K8sAddons'
     VmResources:
       description: Definition of Virtual Machine Infrastructure
       type: object
@@ -2129,10 +2127,9 @@ components:
           example: 1024
           description: Memory in mega bytes
         additionalStorages:
-          $ref: "#/components/schemas/AdditionalStorage"
+          $ref: '#/components/schemas/AdditionalStorage'
         gpu:
-          $ref: "#/components/schemas/GpuInfo"
-
+          $ref: '#/components/schemas/GpuInfo'
     DockerComposeResources:
       description: Definition of Docker Compose Infrastructure
       type: object
@@ -2163,10 +2160,9 @@ components:
           example: 1024
           description: Memory in mega bytes
         storage:
-          $ref: "#/components/schemas/AdditionalStorage"
+          $ref: '#/components/schemas/AdditionalStorage'
         gpu:
-          $ref: "#/components/schemas/GpuInfo"
-
+          $ref: '#/components/schemas/GpuInfo'
     ContainerResources:
       description: Container Infrastructure Definition
       type: object
@@ -2182,7 +2178,7 @@ components:
           enum:
             - container
         numCPU:
-          $ref: "#/components/schemas/Vcpu"
+          $ref: '#/components/schemas/Vcpu'
         memory:
           type: integer
           format: int32
@@ -2191,10 +2187,9 @@ components:
           example: 1024
           description: Memory in mega bytes
         storage:
-          $ref: "#/components/schemas/AdditionalStorage"
+          $ref: '#/components/schemas/AdditionalStorage'
         gpu:
-          $ref: "#/components/schemas/GpuInfo"
-
+          $ref: '#/components/schemas/GpuInfo'
     InterfaceId:
       type: string
       minLength: 4
@@ -2203,26 +2198,23 @@ components:
       description: |
         This is the interface Identifier that Application Provider
         defines when application is being submitted.
-
     Ipv4Addr:
       type: string
       maxLength: 15
       format: ipv4
-      example: "192.168.0.1"
+      example: 192.168.0.1
       description: |
         IP of the device. A single IPv4 address may be specified in
         dotted-quad form 1.2.3.4. Only this exact IP number will match the flow
         control rule.
-
     Ipv6Addr:
       type: string
       maxLength: 45
       format: ipv6
-      example: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+      example: 2001:db8:85a3:8d3:1319:8a2e:370:7344
       description: |
         IP of the device. A single IPv6 address, following IETF 5952
         format, may be specified like 2001:db8:85a3:8d3:1319:8a2e:370:7344
-
     OperatingSystem:
       description: |
         Information about the Operating System of the application image
@@ -2264,38 +2256,34 @@ components:
             - OS_LICENSE_TYPE_FREE
             - OS_LICENSE_TYPE_ON_DEMAND
             - OTHER
-
     Port:
       type: integer
       description: Port to stablish the connection
       format: int32
       minimum: 1
       maximum: 65535
-
     RequiredResources:
       description: |
         Fundamental hardware requirements to be provisioned by the
         Application Provider.
       oneOf:
-        - $ref: "#/components/schemas/KubernetesResources"
-        - $ref: "#/components/schemas/VmResources"
-        - $ref: "#/components/schemas/ContainerResources"
-        - $ref: "#/components/schemas/DockerComposeResources"
+        - $ref: '#/components/schemas/KubernetesResources'
+        - $ref: '#/components/schemas/VmResources'
+        - $ref: '#/components/schemas/ContainerResources'
+        - $ref: '#/components/schemas/DockerComposeResources'
       discriminator:
         propertyName: infraKind
         mapping:
-          kubernetes: "#/components/schemas/KubernetesResources"
-          virtualMachine: "#/components/schemas/VmResources"
-          container: "#/components/schemas/ContainerResources"
-          dockerCompose: "#/components/schemas/DockerComposeResources"
-
+          kubernetes: '#/components/schemas/KubernetesResources'
+          virtualMachine: '#/components/schemas/VmResources'
+          container: '#/components/schemas/ContainerResources'
+          dockerCompose: '#/components/schemas/DockerComposeResources'
     SubmittedApp:
       description: Information about the submitted app
       type: object
       properties:
         appId:
-          $ref: "#/components/schemas/AppId"
-
+          $ref: '#/components/schemas/AppId'
     Uri:
       type: string
       maxLength: 2048
@@ -2304,26 +2292,309 @@ components:
         A Uniform Resource Identifier (URI) as per RFC 3986,
         identifies the endpoint within an Edge Cloud Zone where the user
         equipment may connect to the selected application instance
-
     XCorrelator:
-      $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
-
+      $ref: '#/components/schemas/x-correlator'
+    x-correlator:
+      description: Correlation id for the different services
+      schema:
+        $ref: '#/components/schemas/XCorrelator-2'
+    XCorrelator-2:
+      type: string
+      description: Correlator string, UUID format recommended but any string matching the pattern can be used
+      pattern: ^[a-zA-Z0-9-_:;.\/<>{}]{0,256}$
+      maxLength: 256
+      example: b4333c46-49c0-4f62-80d7-f0ef930f1c46
+    Source:
+      type: string
+      format: uri-reference
+      minLength: 1
+      maxLength: 2048
+      description: |
+        Identifies the context in which an event happened - be a non-empty `URI-reference` like:
+        - URI with a DNS authority:
+          * https://github.com/cloudevents
+          * mailto:cncf-wg-serverless@lists.cncf.io
+        - Universally-unique URN with a UUID:
+          * urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66
+        - Application-specific identifier:
+          * /cloudevents/spec/pull/123
+          * 1-555-123-4567
+      example: https://notificationSendServer12.example.com
+    DateTime:
+      type: string
+      format: date-time
+      maxLength: 64
+      description: Timestamp. It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+      example: '2018-04-05T17:31:00Z'
   responses:
-    "400":
-      $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
-    "401":
-      $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
-    "403":
-      $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
-    "404":
-      $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
-    "410":
-      $ref: "../common/CAMARA_common.yaml#/components/responses/Generic410"
-    "429":
-      $ref: "../common/CAMARA_common.yaml#/components/responses/Generic429"
-    "500":
-      $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
-    "501":
-      $ref: "../common/CAMARA_common.yaml#/components/responses/Generic501"
-    "503":
-      $ref: "../common/CAMARA_common.yaml#/components/responses/Generic503"
+    '400':
+      $ref: '#/components/responses/Generic400'
+    '401':
+      $ref: '#/components/responses/Generic401'
+    '403':
+      $ref: '#/components/responses/Generic403'
+    '404':
+      $ref: '#/components/responses/Generic404'
+    '410':
+      $ref: '#/components/responses/Generic410'
+    '429':
+      $ref: '#/components/responses/Generic429'
+    '500':
+      $ref: '#/components/responses/Generic500'
+    '501':
+      $ref: '#/components/responses/Generic501'
+    '503':
+      $ref: '#/components/responses/Generic503'
+    Generic400:
+      description: Bad Request
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator-2'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 400
+                  code:
+                    enum:
+                      - INVALID_ARGUMENT
+                      - OUT_OF_RANGE
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
+            GENERIC_400_OUT_OF_RANGE:
+              description: Out of Range. Specific Syntax Exception used when a given field has a pre-defined range or a invalid filter criteria combination is requested
+              value:
+                status: 400
+                code: OUT_OF_RANGE
+                message: Client specified an invalid range.
+    Generic401:
+      description: Unauthorized
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator-2'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 401
+                  code:
+                    enum:
+                      - UNAUTHENTICATED
+          examples:
+            GENERIC_401_UNAUTHENTICATED:
+              description: Request cannot be authenticated and a new authentication is required
+              value:
+                status: 401
+                code: UNAUTHENTICATED
+                message: Request not authenticated due to missing, invalid, or expired credentials. A new authentication is required.
+    Generic403:
+      description: Forbidden
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator-2'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 403
+                  code:
+                    enum:
+                      - PERMISSION_DENIED
+                      - INVALID_TOKEN_CONTEXT
+          examples:
+            GENERIC_403_PERMISSION_DENIED:
+              description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
+              value:
+                status: 403
+                code: PERMISSION_DENIED
+                message: Client does not have sufficient permissions to perform this action.
+            GENERIC_403_INVALID_TOKEN_CONTEXT:
+              description: Reflect some inconsistency between information in some field of the API and the related OAuth2 Token
+              value:
+                status: 403
+                code: INVALID_TOKEN_CONTEXT
+                message: Request body is not consistent with access token.
+    Generic500:
+      description: Internal Server Error
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator-2'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 500
+                  code:
+                    enum:
+                      - INTERNAL
+          examples:
+            GENERIC_500_INTERNAL:
+              description: Problem in Server side. Regular Server Exception
+              value:
+                status: 500
+                code: INTERNAL
+                message: Unknown server error. Typically a server bug.
+    Generic503:
+      description: Service Unavailable
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator-2'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 503
+                  code:
+                    enum:
+                      - UNAVAILABLE
+          examples:
+            GENERIC_503_UNAVAILABLE:
+              description: Service is not available. Temporary situation usually related to maintenance process in the server side
+              value:
+                status: 503
+                code: UNAVAILABLE
+                message: Service Unavailable.
+    Generic501:
+      description: Not Implemented
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator-2'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 501
+                  code:
+                    enum:
+                      - NOT_IMPLEMENTED
+          examples:
+            GENERIC_501_NOT_IMPLEMENTED:
+              description: Service not implemented. The use of this code should be avoided as far as possible to get the objective to reach aligned implementations
+              value:
+                status: 501
+                code: NOT_IMPLEMENTED
+                message: This functionality is not implemented yet.
+    Generic404:
+      description: Not found
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator-2'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 404
+                  code:
+                    enum:
+                      - NOT_FOUND
+                      - IDENTIFIER_NOT_FOUND
+          examples:
+            GENERIC_404_NOT_FOUND:
+              description: Resource is not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: The specified resource is not found.
+            GENERIC_404_IDENTIFIER_NOT_FOUND:
+              description: Some identifier cannot be matched to a device
+              value:
+                status: 404
+                code: IDENTIFIER_NOT_FOUND
+                message: Device identifier not found.
+    Generic410:
+      description: Gone
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator-2'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 410
+                  code:
+                    enum:
+                      - GONE
+          examples:
+            GENERIC_410_GONE:
+              description: Use in notifications flow to allow API Consumer to indicate that its callback is no longer available
+              value:
+                status: 410
+                code: GONE
+                message: Access to the target resource is no longer available.
+    Generic429:
+      description: Too Many Requests
+      headers:
+        x-correlator:
+          $ref: '#/components/headers/x-correlator-2'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorInfo'
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 429
+                  code:
+                    enum:
+                      - QUOTA_EXCEEDED
+                      - TOO_MANY_REQUESTS
+          examples:
+            GENERIC_429_QUOTA_EXCEEDED:
+              description: Request is rejected due to exceeding a business quota limit
+              value:
+                status: 429
+                code: QUOTA_EXCEEDED
+                message: Out of resource quota.
+            GENERIC_429_TOO_MANY_REQUESTS:
+              description: Access to the API has been temporarily blocked due to rate or spike arrest limits being reached
+              value:
+                status: 429
+                code: TOO_MANY_REQUESTS
+                message: Rate limit reached.
