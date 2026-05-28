@@ -2306,7 +2306,7 @@ components:
         equipment may connect to the selected application instance
 
     XCorrelator:
-      $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+      $ref: "../common/CAMARA_common.yaml#/components/schemas/XCorrelator"
 
   responses:
     "400":
