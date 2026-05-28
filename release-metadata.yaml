@@ -1,0 +1,13 @@
+repository:
+  repository_name: EdgeApplicationManagement
+  release_tag: r1.1
+  release_type: pre-release-alpha
+  release_date: null
+  src_commit_sha: dd8469efd9af6709820aacc1469cae09505ca84d
+apis:
+- api_name: edge-application-management
+  api_version: 0.1.0-alpha.1
+  api_title: Edge Application Management API
+dependencies:
+  commonalities_release: r4.3 (0.8.0)
+  identity_consent_management_release: r4.2 (0.5.0)
