@@ -78,19 +78,27 @@ The API definition(s) are based on
 
 ### Added
 
-* _To be filled during release review_
+Initial release of the Edge Application Management API.
+
+This version introduces the complete set of endpoints, data models, and operations required to manage edge applications, including lifecycle management and related capabilities.
 
 ### Changed
 
-* _To be filled during release review_
+Not applicable.
+
+This is the first release of the API; therefore, no changes from previous versions exist.
 
 ### Fixed
 
-* _To be filled during release review_
+Not applicable.
+
+No prior versions exist; therefore, no fixes are included in this release.
 
 ### Removed
 
-* _To be filled during release review_
+Not applicable.
+
+No features have been removed as this is the initial version of the API.
 
 **Full Changelog**: https://github.com/camaraproject/EdgeApplicationManagement/commits/r1.1
 
