@@ -27,8 +27,16 @@ Sandbox API Repository to describe, develop, document, and test the EdgeApplicat
 
 ## Release Information
 
-The repository has no (pre)releases yet, work in progress is within the main branch.
+> [!NOTE]
+> This repository has only pre-release versions available yet. Pre-releases are for testing and may change before public release.
 
+* The latest pre-release is [r1.1](https://github.com/camaraproject/EdgeApplicationManagement/releases/tag/r1.1) (alpha), with the following API versions:
+  * **edge-application-management 0.1.0-alpha.1**
+  [[YAML]](https://github.com/camaraproject/EdgeApplicationManagement/blob/r1.1/code/API_definitions/edge-application-management.yaml)  [[ReDoc]](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/EdgeApplicationManagement/r1.1/code/API_definitions/edge-application-management.yaml&nocors)  [[Swagger]](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/EdgeApplicationManagement/r1.1/code/API_definitions/edge-application-management.yaml)
+
+* For changes see [CHANGELOG](https://github.com/camaraproject/EdgeApplicationManagement/tree/main/CHANGELOG)
+
+_The above section is automatically synchronized by CAMARA project-administration._
 <!-- CAMARA:RELEASE-INFO:END -->
 
 ## Contributing
