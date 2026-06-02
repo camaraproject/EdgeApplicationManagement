@@ -2,7 +2,7 @@ repository:
   repository_name: EdgeApplicationManagement
   release_tag: r1.1
   release_type: pre-release-alpha
-  release_date: null
+  release_date: '2026-06-02T12:46:43Z'
   src_commit_sha: dd8469efd9af6709820aacc1469cae09505ca84d
 apis:
 - api_name: edge-application-management
