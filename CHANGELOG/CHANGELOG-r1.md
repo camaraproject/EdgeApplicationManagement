@@ -91,23 +91,36 @@ The API definition(s) are based on
 
 ### Breaking changes
 
-* N/A
+* `deleteApp` `409` error code changed from `ABORTED` to `INCOMPATIBLE_STATE` (#56)
+* Removed `410 GONE` response from `getAppDeployments`, `deleteAppDeployment` and `updateAppDeployment` (#56)
+* Removed `501 NOT_IMPLEMENTED` response from `submitApp`, `createAppInstance` and `createAppDeployment` (#56)
+* `getAppInstance` (`GET /app-instances/{appInstanceId}`) is now a by-id-only operation; the list/filter behavior moved to the new `getAppInstances` (`GET /app-instances`) operation (#58)
+* Removed the `appDeploymentId` query parameter filter from `getAppDeployments` (`GET /deployments`); retrieving a single deployment by id is now done via the new `getAppDeployment` (`GET /deployments/{appDeploymentId}`) operation (#58)
+* `AccessTokenCredential.accessToken`, `AccessTokenCredential.accessTokenType` and `AppManifest.appRepo.credentials` are now marked `writeOnly` and will no longer be present in API responses (#55, #66)
 
 ### Added
 
-* N/A
+* `getAppInstances` operation (`GET /app-instances`) to list application instances, with optional filtering by `appId` and `region` (#58)
+* `getAppDeployment` operation (`GET /deployments/{appDeploymentId}`) to retrieve a single application deployment by id (#58)
+* Missing `401 UNAUTHENTICATED` test scenarios across all operation `.feature` files, and the missing `409 ABORTED` test scenario for `updateAppDeployment` (#63)
 
 ### Changed
 
-* N/A
+* Removed "API" from `info.title` per CAMARA API Design Guide rule 5.3.1 (#60)
+* Documented the `x-correlator` response header on the `409` and `204` responses that were missing it (#66)
 
 ### Fixed
 
-* N/A
+* Fixed broken regex pattern, incorrect callback request body shape, and a broken `externalDocs` link (#59)
+* Marked credential fields `writeOnly` and restored `accessToken.maxLength` to `4096` to prevent credential exposure in API responses (#55, #66)
+* Fixed wrong `operationId` values referenced in several `.feature` test definition files (#61)
+* Fixed phantom schema references, wrong error codes, and copy-paste bugs across `.feature` test definition files (#62)
 
 ### Removed
 
-* N/A
+* Removed `410 GONE` response from `getAppDeployments`, `deleteAppDeployment` and `updateAppDeployment` (#56)
+* Removed `501 NOT_IMPLEMENTED` response from `submitApp`, `createAppInstance` and `createAppDeployment` (#56)
+* Removed the `appDeploymentId` query parameter filter from `getAppDeployments`, superseded by the new by-id `getAppDeployment` operation (#58)
 
 **Full Changelog**: https://github.com/camaraproject/EdgeApplicationManagement/commits/r1.2
 
