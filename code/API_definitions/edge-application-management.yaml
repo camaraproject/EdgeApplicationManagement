@@ -87,9 +87,11 @@ info:
     removing all associated instances.
 
     __Edge Cloud information__
-    *  __getEdgeCloudZones__ List of the operators Edge Cloud Zones and their
-    status, ordering the results by location and filtering by status
-    (active/inactive/unknown)
+    *  __getEdgeCloudZones__ Paginated list of the operators Edge Cloud Zones,
+    including their status, geographical country code and, when applicable,
+    the Kubernetes clusters available within each zone. Results can be
+    filtered by country code, Edge Cloud Provider, Edge Cloud
+    Provider-specific region and status.
 
     <!-- CAMARA:MANDATORY:authorization-and-authentication:BEGIN -->
 
@@ -201,8 +203,6 @@ tags:
     description: Application and Application Instance Lice Cycle Management
   - name: Edge Cloud
     description: Edge Cloud Zones Availability
-  - name: Cluster
-    description: Kubernetes Cluster information
   - name: App Instance CALLBACK Operation
     description: Operations for handling application instance callback notifications
   - name: App Deployment CALLBACK Operation
@@ -994,69 +994,6 @@ paths:
         "503":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic503"
 
-  /clusters:
-    get:
-      security:
-        - openId:
-            - edge-application-management:clusters:read
-      tags:
-        - Cluster
-      summary: |
-        Retrieve a list of the available clusters filtered by the optional
-        query parameters.
-      description: |
-        List available cluster information
-      operationId: getClusters
-      parameters:
-        - $ref: "#/components/parameters/x-correlator"
-        - name: region
-          description: |
-            Human readable name of the geographical Edge Cloud Region of
-            the Cluster. Defined by the Edge Cloud Provider.
-          in: query
-          required: false
-          schema:
-            $ref: "#/components/schemas/EdgeCloudRegion"
-        - name: clusterRef
-          description: |
-            A globally unique identifier for the Cluster.
-          in: query
-          required: false
-          schema:
-            $ref: "#/components/schemas/KubernetesClusterRef"
-        - name: edgeCloudZoneId
-          description: |
-            Edge Cloud Zone identifier.
-          in: query
-          required: false
-          schema:
-            $ref: "#/components/schemas/EdgeCloudZoneId"
-      responses:
-        "200":
-          description: |
-            Successful response, returning the cluster's information.
-            Returns an empty list if no clusters were found or none match
-            the specified query parameters.
-          headers:
-            x-correlator:
-              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
-          content:
-            application/json:
-              schema:
-                type: array
-                maxItems: 100
-                items:
-                  $ref: "#/components/schemas/ClusterInfo"
-        "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
-        "401":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
-        "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
-        "500":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
-        "503":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic503"
   /edge-cloud-zones:
     get:
       security:
@@ -1064,50 +1001,81 @@ paths:
             - edge-application-management:edge-cloud-zones:read
       tags:
         - Edge Cloud
-      summary: Retrieve a list of the provider's Edge Cloud Zones and their status
+      summary: Retrieve a paginated list of the provider's Edge Cloud Zones
       description: |
-        List of the provider's Edge Cloud Zones and their
-        status, ordering the results by location and filtering by
-        status (active/inactive/unknown)
+        List of the provider's Edge Cloud Zones, including their status and,
+        when applicable, the Kubernetes clusters available within each zone.
+        Results can be filtered by country code, Edge Cloud Provider,
+        Edge Cloud Provider-specific region and status, and are returned as
+        a paginated collection.
       operationId: getEdgeCloudZones
       parameters:
         - $ref: "#/components/parameters/x-correlator"
-        - name: region
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/page"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/perPage"
+        - name: countryCode
           description: |
-            Human readable name of the geographical Edge Cloud Region of
-            the Edge Cloud. Defined by the Edge Cloud Provider.
+            ISO 3166-1 alpha-2 country code to filter Edge Cloud Zones by
+            their geographical location, independent of any Edge Cloud
+            Provider-specific region naming.
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/CountryCode"
+        - name: edgeCloudProvider
+          description: |
+            Human readable name of the Edge Cloud Provider to filter Edge
+            Cloud Zones by.
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/EdgeCloudProvider"
+        - name: edgeCloudRegion
+          description: |
+            Edge Cloud Provider-specific geographical region name to filter
+            Edge Cloud Zones by. Since this value is not standardized across
+            Edge Cloud Providers, prefer filtering by countryCode when
+            provider-independent results are needed.
           in: query
           required: false
           schema:
             $ref: "#/components/schemas/EdgeCloudRegion"
         - name: status
-          description: Human readable status of the Edge Cloud Zone
+          description: |
+            Status of the Edge Cloud Zone to filter by. If omitted, Edge
+            Cloud Zones are returned regardless of their status.
           in: query
           required: false
           schema:
-            $ref: "#/components/schemas/EdgeCloudZoneStatus"
+            type: string
+            enum:
+              - active
+              - inactive
+              - unknown
       responses:
         "200":
           description: |
-            Successful response, returning the
-            Available Edge Cloud Zones.
+            Successful response, returning a paginated list of the Edge
+            Cloud Zones matching the specified query parameters.
           headers:
             x-correlator:
               $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+            x-total-count:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-total-count"
+            x-total-pages:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-total-pages"
+            link:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/link"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EdgeCloudZones"
+                $ref: "#/components/schemas/EdgeCloudZoneList"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
-        "500":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
-        "503":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic503"
+          $ref: "#/components/responses/Generic403"
 components:
   securitySchemes:
     openId:
@@ -1129,6 +1097,58 @@ components:
         Correlation id for the different services
       schema:
         $ref: "#/components/schemas/XCorrelator"
+
+  responses:
+    Generic400:
+      description: Bad Request
+      headers:
+        x-correlator:
+          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 400
+                  code:
+                    enum:
+                      - INVALID_ARGUMENT
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
+    Generic403:
+      description: Forbidden
+      headers:
+        x-correlator:
+          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 403
+                  code:
+                    enum:
+                      - PERMISSION_DENIED
+          examples:
+            GENERIC_403_PERMISSION_DENIED:
+              description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
+              value:
+                status: 403
+                code: PERMISSION_DENIED
+                message: Client does not have sufficient permissions to perform this action.
 
   callbacks:
     onAppInstanceStatusChange:
@@ -1718,26 +1738,24 @@ components:
 
     ClusterInfo:
       type: object
-      description: Kubernetes cluster information
+      description: |
+        Kubernetes cluster information. Returned nested within the Edge
+        Cloud Zone it belongs to, so identifiers already provided by the
+        enclosing Edge Cloud Zone (zone id, region) are not repeated here.
       required:
         - name
-        - provider
+        - edgeCloudProvider
         - clusterRef
-        - edgeCloudZoneId
       properties:
         name:
           type: string
           maxLength: 64
           description: |
-            Name of the Cluster, scoped to the Provider
-        provider:
-          $ref: "#/components/schemas/AppProvider"
+            Name of the Cluster, scoped to the Edge Cloud Provider
+        edgeCloudProvider:
+          $ref: "#/components/schemas/EdgeCloudProvider"
         clusterRef:
           $ref: "#/components/schemas/KubernetesClusterRef"
-        edgeCloudZoneId:
-          $ref: "#/components/schemas/EdgeCloudZoneId"
-        edgeCloudRegion:
-          $ref: "#/components/schemas/EdgeCloudRegion"
         version:
           type: string
           maxLength: 64
@@ -1751,6 +1769,17 @@ components:
             $ref: "#/components/schemas/KubernetesNodePool"
           minItems: 1
 
+    CountryCode:
+      type: string
+      pattern: ^[A-Z]{2}$
+      minLength: 2
+      maxLength: 2
+      description: |
+        ISO 3166-1 alpha-2 country code representing the geographical
+        location of the Edge Cloud Zone, independent of any Edge Cloud
+        Provider-specific region naming.
+      example: "GB"
+
     EdgeCloudProvider:
       type: string
       maxLength: 64
@@ -1763,15 +1792,22 @@ components:
         Human readable name of the geographical Edge Cloud Region of
         the Edge Cloud. Defined by the Edge Cloud Provider.
 
-    EdgeCloudZones:
-      type: array
-      items:
-        $ref: "#/components/schemas/EdgeCloudZone"
-      minItems: 1
-      maxItems: 100
+    EdgeCloudZoneList:
+      type: object
       description: |
-        A collection of Edge Cloud Zones where the Application Provider can
-        instantiate an Application Instance.
+        A paginated collection of Edge Cloud Zones where the Application
+        Provider can instantiate an Application Instance.
+      required:
+        - edgeCloudZones
+        - pagination
+      properties:
+        edgeCloudZones:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/EdgeCloudZone"
+        pagination:
+          $ref: "../common/CAMARA_common.yaml#/components/schemas/Pagination"
 
     EdgeCloudZoneId:
       type: string
@@ -1795,6 +1831,7 @@ components:
         - edgeCloudZoneId
         - edgeCloudZoneName
         - edgeCloudProvider
+        - countryCode
       properties:
         edgeCloudZoneId:
           $ref: "#/components/schemas/EdgeCloudZoneId"
@@ -1806,6 +1843,17 @@ components:
           $ref: "#/components/schemas/EdgeCloudProvider"
         edgeCloudRegion:
           $ref: "#/components/schemas/EdgeCloudRegion"
+        countryCode:
+          $ref: "#/components/schemas/CountryCode"
+        clusters:
+          description: |
+            Kubernetes clusters available within this Edge Cloud Zone, when
+            applicable. Omitted or empty if the Edge Cloud Provider does not
+            offer Kubernetes clusters in this zone.
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/ClusterInfo"
 
     EdgeCloudZoneName:
       type: string
