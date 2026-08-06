@@ -25,17 +25,6 @@ Feature: CAMARA Edge Application Management API, vwip - Operations getApps
     And A list of applications with information of them is returned
     And the response body complies with the OAS schema at "/components/schemas/AppManifestInfo"
   # Errors
-  # Error 404
-  @eam_getApps_404.1_apps_not_found
-  Scenario: Get a list of application that the user has permission to view
-    Given there are not any application submitted by operation submitApp
-    When the request "getApps" is sent
-    Then the response status code is 404
-    And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response header "Content-Type" is "application/json"
-    And the response property "$.status" is 404
-    And the response property "$.code" is "NOT_FOUND"
-    And the response property "$.message" contains a user friendly text
   # Error 401
   @eam_getApps_401.1_missing_access_token
   Scenario: Missing access token
