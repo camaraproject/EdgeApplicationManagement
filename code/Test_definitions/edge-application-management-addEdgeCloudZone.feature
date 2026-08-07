@@ -1,4 +1,4 @@
-Feature: CAMARA Edge Application Management API, vwip - Operation updateAppDeployment
+Feature: CAMARA Edge Application Management API, vwip - Operation addEdgeCloudZone
   # Input to be provided by the implementation to the tester
   #
   # Implementation indications:
@@ -7,46 +7,69 @@ Feature: CAMARA Edge Application Management API, vwip - Operation updateAppDeplo
   # Testing assets:
   # * An appId of a submitted application and the values used in the submitApp operation.
   # * A deployment instantiated by createAppDeployment operation.
+  # * An additional edgeCloudZoneId not yet part of the deployment.
   #
   # References to OAS spec schemas refer to schemas specified in edge-application-management.yaml
-  Background: Common updateAppDeployment setup
+  Background: Common addEdgeCloudZone setup
     Given an environment at "apiRoot"
-    And the resource "/edge-application-management/vwip/deployments/{appDeploymentId}"
+    And the resource "/edge-application-management/vwip/deployments/{appDeploymentId}/addEdgeCloudZone"
     And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
   # Properties not explicitly overwritten in the Scenarios can take any values compliant with the schema
     And the request body is set by default to a request body compliant with the request body schema for this operation
   # Success scenarios
-  @eam_updateAppDeployment_01_generic_success_scenario
-  Scenario: Update a running instance of an application within an Edge Cloud Zone with mandatory parameter ("appDeploymentId")
-    Given there are application instances running
+  @eam_addEdgeCloudZone_01_generic_success_scenario
+  Scenario: Add an Edge Cloud Zone to an existing deployment with mandatory parameters
+    Given there is a deployment created by operation createAppDeployment
     And the request path parameter "$.appDeploymentId" is set to a valid application deployment ID
-    And the body property "$.appDeploymentName" is set to a valid name
-    When the request "updateAppDeployment" is sent
+    And the request body property "$.edgeCloudZoneId" is set to a valid edge zone id not yet part of the deployment
+    When the request "addEdgeCloudZone" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "/components/schemas/AppDeploymentInfo"
+    And the response property "$.edgeCloudZones" contains the value provided for "$.edgeCloudZoneId"
+  # Error scenarios
   # Error 409
-  @eam_updateAppDeployment_409.1_aborted
-  Scenario: Error response for a concurrent update conflict
-    Given there is a concurrent update in progress for the deployment
+  @eam_addEdgeCloudZone_409.1_already_exists
+  Scenario: Add an Edge Cloud Zone already part of the deployment
+    Given there is a deployment created by operation createAppDeployment
     And the request path parameter "$.appDeploymentId" is set to a valid application deployment ID
-    When the request "updateAppDeployment" is sent
+    And the request body property "$.edgeCloudZoneId" is set to an edge zone id already part of the deployment
+    When the request "addEdgeCloudZone" is sent
     Then the response status code is 409
+    And the response header "Content-Type" is "application/json"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response property "$.status" is 409
+    And the response property "$.code" is "ALREADY_EXISTS"
+    And the response property "$.message" contains a user friendly text
+  # Error 400
+  @eam_addEdgeCloudZone_400.1_schema_not_compliant
+  Scenario: Invalid Argument. Generic Syntax Exception
+    Given the request body is set to any value which is not compliant with the request body schema for this operation
+    When the request "addEdgeCloudZone" is sent
+    Then the response status code is 400
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
-    And the response property "$.status" is 409
-    And the response property "$.code" is "ABORTED"
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
-  # Errors
+  @eam_addEdgeCloudZone_400.2_no_request_body
+  Scenario: Missing request body
+    Given the request body is not included
+    When the request "addEdgeCloudZone" is sent
+    Then the response status code is 400
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response header "Content-Type" is "application/json"
+    And the response property "$.status" is 400
+    And the response property "$.code" is "INVALID_ARGUMENT"
+    And the response property "$.message" contains a user friendly text
   # Error 404
-  @eam_updateAppDeployment_404.1_invalid_parameter
-  Scenario: Update a running instance of an application within an Edge Cloud Zone with mandatory, and non-existing, parameter ("appDeploymentId")
-    Given there are application instances running
-    And the path parameter "$.appDeploymentId" is set to an invalid application instance ID
-    When the request "updateAppDeployment" is sent
+  @eam_addEdgeCloudZone_404.1_invalid_parameter
+  Scenario: Add an Edge Cloud Zone to a non-existing deployment
+    Given the request path parameter "$.appDeploymentId" is set to an invalid application deployment ID
+    When the request "addEdgeCloudZone" is sent
     Then the response status code is 404
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
@@ -54,21 +77,21 @@ Feature: CAMARA Edge Application Management API, vwip - Operation updateAppDeplo
     And the response property "$.code" is "NOT_FOUND"
     And the response property "$.message" contains a user friendly text
   # Error 401
-  @eam_updateAppDeployment_401.1_missing_access_token
+  @eam_addEdgeCloudZone_401.1_missing_access_token
   Scenario: Missing access token
     Given the header "Authorization" is not included
-    When the request "updateAppDeployment" is sent
+    When the request "addEdgeCloudZone" is sent
     Then the response status code is 401
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
     And the response property "$.status" is 401
     And the response property "$.code" is "UNAUTHENTICATED"
     And the response property "$.message" contains a user friendly text
-  # Error 403
-  @eam_updateAppDeployment_403.1_missing_access_token_scope
+  # Errors 403
+  @eam_addEdgeCloudZone_403.1_missing_access_token_scope
   Scenario: Missing access token scope
     Given the header "Authorization" is set to an access token that does not include the required scope
-    When the request "updateAppDeployment" is sent
+    When the request "addEdgeCloudZone" is sent
     Then the response status code is 403
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
