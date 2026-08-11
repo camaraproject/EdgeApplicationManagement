@@ -869,7 +869,7 @@ paths:
         "503":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic503"
 
-  /deployments/{appDeploymentId}/addEdgeCloudZone:
+  /deployments/{appDeploymentId}/add-edge-cloud-zone:
     post:
       security:
         - openId:
@@ -940,7 +940,7 @@ paths:
         "503":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic503"
 
-  /deployments/{appDeploymentId}/removeEdgeCloudZone:
+  /deployments/{appDeploymentId}/remove-edge-cloud-zone:
     post:
       security:
         - openId:
@@ -1011,7 +1011,7 @@ paths:
         "503":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic503"
 
-  /deployments/{appDeploymentId}/addKubernetesCluster:
+  /deployments/{appDeploymentId}/add-kubernetes-cluster:
     post:
       security:
         - openId:
@@ -1082,7 +1082,7 @@ paths:
         "503":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic503"
 
-  /deployments/{appDeploymentId}/removeKubernetesCluster:
+  /deployments/{appDeploymentId}/remove-kubernetes-cluster:
     post:
       security:
         - openId:
@@ -1969,6 +1969,9 @@ components:
         - pagination
       properties:
         edgeCloudZones:
+          description: |
+            The Edge Cloud Zones matching the specified query parameters,
+            for the requested page.
           type: array
           maxItems: 100
           items:
