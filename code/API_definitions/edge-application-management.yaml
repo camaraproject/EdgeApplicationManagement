@@ -83,13 +83,20 @@ info:
     deployment.
     * __getAppDeployments__ - Retrieves a list of deployments for a given
     application.
+    * __addEdgeCloudZone__ / __removeEdgeCloudZone__ - Extend or reduce an
+    existing application deployment by adding or removing a specific Edge
+    Cloud Zone.
+    * __addKubernetesCluster__ / __removeKubernetesCluster__ - Add or remove
+    a specific Kubernetes cluster used by an existing application deployment.
     * __deleteAppDeployment__ - Terminates a specific application deployment,
     removing all associated instances.
 
     __Edge Cloud information__
-    *  __getEdgeCloudZones__ List of the operators Edge Cloud Zones and their
-    status, ordering the results by location and filtering by status
-    (active/inactive/unknown)
+    *  __getEdgeCloudZones__ Paginated list of the operators Edge Cloud Zones,
+    including their status, geographical country code and, when applicable,
+    the Kubernetes clusters available within each zone. Results can be
+    filtered by country code, Edge Cloud Provider, Edge Cloud
+    Provider-specific region and status.
 
     <!-- CAMARA:MANDATORY:authorization-and-authentication:BEGIN -->
 
@@ -201,8 +208,6 @@ tags:
     description: Application and Application Instance Lice Cycle Management
   - name: Edge Cloud
     description: Edge Cloud Zones Availability
-  - name: Cluster
-    description: Kubernetes Cluster information
   - name: App Instance CALLBACK Operation
     description: Operations for handling application instance callback notifications
   - name: App Deployment CALLBACK Operation
@@ -243,11 +248,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/SubmittedApp"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "#/components/responses/Generic403"
         "409":
           description: Conflict
           headers:
@@ -292,11 +297,11 @@ paths:
                 items:
                   $ref: "#/components/schemas/AppManifestInfo"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "#/components/responses/Generic403"
         "500":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
         "503":
@@ -336,13 +341,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/AppManifestInfo"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
+          $ref: "#/components/responses/Generic404"
         "500":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
         "503":
@@ -380,13 +385,13 @@ paths:
             x-correlator:
               $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
+          $ref: "#/components/responses/Generic404"
         "409":
           description: Conflict
           headers:
@@ -463,11 +468,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/AppInstanceInfo"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "#/components/responses/Generic403"
         "409":
           description: Conflict
           headers:
@@ -536,11 +541,11 @@ paths:
                 items:
                   $ref: "#/components/schemas/AppInstanceInfo"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "#/components/responses/Generic403"
         "500":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
         "503":
@@ -579,13 +584,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/AppInstanceInfo"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
+          $ref: "#/components/responses/Generic404"
         "500":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
         "503":
@@ -625,13 +630,13 @@ paths:
             x-correlator:
               $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
+          $ref: "#/components/responses/Generic404"
         "500":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
         "503":
@@ -704,11 +709,11 @@ paths:
                   appDeploymentId:
                     $ref: "#/components/schemas/AppDeploymentId"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "#/components/responses/Generic403"
         "409":
           description: Conflict
           headers:
@@ -769,11 +774,11 @@ paths:
                 items:
                   $ref: "#/components/schemas/AppDeploymentInfo"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "#/components/responses/Generic403"
         "500":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
         "503":
@@ -812,13 +817,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/AppDeploymentInfo"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
+          $ref: "#/components/responses/Generic404"
         "500":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
         "503":
@@ -852,115 +857,56 @@ paths:
             x-correlator:
               $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
+          $ref: "#/components/responses/Generic404"
         "500":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
         "503":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic503"
-    patch:
+
+  /deployments/{appDeploymentId}/add-edge-cloud-zone:
+    post:
       security:
         - openId:
             - edge-application-management:deployments:update
       tags:
         - Application
-      summary: Update an Application Deployment
+      summary: Add an Edge Cloud Zone to an Application Deployment
       description: |
-        Update the configuration or properties of an existing application deployment
-        using JSON Merge Patch semantics (RFC 7396). Only the fields provided in the
-        request body will be updated. Fields not included in the request will remain unchanged.
-
-        IMPORTANT: When updating array fields (like edgeCloudZones or kubernetesClusterRefs),
-        JSON Merge Patch will REPLACE the entire array, not merge or append to it.
-
-        This operation may include changing the deployment name, target Edge Cloud Zones, or other updatable fields.
-      operationId: updateAppDeployment
+        Extend an existing application deployment to an additional Edge
+        Cloud Zone, instantiating the application there.
+      operationId: addEdgeCloudZone
       parameters:
         - $ref: "#/components/parameters/x-correlator"
         - name: appDeploymentId
           in: path
           description: |
-            Identifier of the specific application deployment to be updated.
+            Identifier of the specific application deployment to be
+            extended.
           required: true
           schema:
             $ref: "#/components/schemas/AppDeploymentId"
       requestBody:
         description: |
-          The fields to update for the application deployment using JSON Merge Patch (RFC 7396).
-          Only the fields included in the request will be updated; omitted fields remain unchanged.
-
-          NOTE: When updating array fields (edgeCloudZones, kubernetesClusterRefs), the entire array
-          will be REPLACED, not merged. To modify an array, you must include the complete array
-          with all desired elements in your request.
+          The Edge Cloud Zone to add to the application deployment.
         required: true
         content:
-          application/merge-patch+json:
+          application/json:
             schema:
               type: object
+              required:
+                - edgeCloudZoneId
               properties:
-                appDeploymentName:
-                  $ref: "#/components/schemas/AppDeploymentName"
-                edgeCloudZones:
-                  type: array
-                  maxItems: 100
-                  items:
-                    $ref: "#/components/schemas/EdgeCloudZoneId"
-                kubernetesClusterRefs:
-                  type: array
-                  maxItems: 100
-                  items:
-                    $ref: "#/components/schemas/KubernetesClusterRef"
-            examples:
-              updateDeploymentName:
-                summary: Update only the deployment name
-                description: |
-                  This example shows how to update only the deployment name.
-                  Other fields will remain unchanged.
-                value:
-                  appDeploymentName: "my_updated_deployment"
-              updateMultipleFields:
-                summary: Update multiple fields simultaneously
-                description: |
-                  This example shows how to update both the deployment name
-                  and Edge Cloud Zones in a single request. Remember that both
-                  array fields will be completely replaced with the new values.
-                value:
-                  appDeploymentName: "production_deployment"
-                  edgeCloudZones:
-                    - "123e4567-e89b-12d3-a456-426614174000"
-                    - "123e4567-e89b-12d3-a456-426614174001"
-                  kubernetesClusterRefs:
-                    - "642f6105-7015-4af1-a4d1-e1ecb8437abc"
-                    - "642f6105-7015-4af1-a4d1-e1ecb8437def"
-              arrayReplacementExample:
-                summary: Example of array replacement behavior
-                description: |
-                  This example demonstrates how arrays are completely replaced in JSON Merge Patch.
-
-                  If the current deployment has:
-                  - edgeCloudZones: ["123e4567-e89b-12d3-a456-426614174000", "123e4567-e89b-12d3-a456-426614174001", "123e4567-e89b-12d3-a456-426614174002"]
-                  - kubernetesClusterRefs: ["642f6105-7015-4af1-a4d1-e1ecb8437abc", "642f6105-7015-4af1-a4d1-e1ecb8437def"]
-
-                  And the user sends this patch:
-                  - edgeCloudZones: ["123e4567-e89b-12d3-a456-426614174000", "123e4567-e89b-12d3-a456-426614174003"]
-
-                  The result will be:
-                  - edgeCloudZones: ["123e4567-e89b-12d3-a456-426614174000", "123e4567-e89b-12d3-a456-426614174003"] (completely replaced)
-                  - kubernetesClusterRefs: ["642f6105-7015-4af1-a4d1-e1ecb8437abc", "642f6105-7015-4af1-a4d1-e1ecb8437def"] (unchanged, as it wasn't in the patch)
-
-                  To add a single zone while keeping existing ones, ALL zones must be included in the request.
-                value:
-                  edgeCloudZones:
-                    - "123e4567-e89b-12d3-a456-426614174000"
-                    - "123e4567-e89b-12d3-a456-426614174003"
+                edgeCloudZoneId:
+                  $ref: "#/components/schemas/EdgeCloudZoneId"
       responses:
         "200":
-          description: Application deployment updated successfully
+          description: Edge Cloud Zone added successfully
           headers:
             x-correlator:
               $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
@@ -969,13 +915,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/AppDeploymentInfo"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "#/components/responses/Generic403"
         "404":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic404"
+          $ref: "#/components/responses/Generic404"
         "409":
           description: Conflict
           headers:
@@ -987,76 +933,226 @@ paths:
                 $ref: "#/components/schemas/ErrorInfo"
               example:
                 status: 409
-                code: ABORTED
-                message: "Update conflict"
+                code: ALREADY_EXISTS
+                message: "Edge Cloud Zone already part of the deployment"
         "500":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
         "503":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic503"
 
-  /clusters:
-    get:
+  /deployments/{appDeploymentId}/remove-edge-cloud-zone:
+    post:
       security:
         - openId:
-            - edge-application-management:clusters:read
+            - edge-application-management:deployments:update
       tags:
-        - Cluster
-      summary: |
-        Retrieve a list of the available clusters filtered by the optional
-        query parameters.
+        - Application
+      summary: Remove an Edge Cloud Zone from an Application Deployment
       description: |
-        List available cluster information
-      operationId: getClusters
+        Terminate the application instance in the given Edge Cloud Zone and
+        remove it from the deployment.
+      operationId: removeEdgeCloudZone
       parameters:
         - $ref: "#/components/parameters/x-correlator"
-        - name: region
+        - name: appDeploymentId
+          in: path
           description: |
-            Human readable name of the geographical Edge Cloud Region of
-            the Cluster. Defined by the Edge Cloud Provider.
-          in: query
-          required: false
+            Identifier of the specific application deployment to be
+            reduced.
+          required: true
           schema:
-            $ref: "#/components/schemas/EdgeCloudRegion"
-        - name: clusterRef
-          description: |
-            A globally unique identifier for the Cluster.
-          in: query
-          required: false
-          schema:
-            $ref: "#/components/schemas/KubernetesClusterRef"
-        - name: edgeCloudZoneId
-          description: |
-            Edge Cloud Zone identifier.
-          in: query
-          required: false
-          schema:
-            $ref: "#/components/schemas/EdgeCloudZoneId"
+            $ref: "#/components/schemas/AppDeploymentId"
+      requestBody:
+        description: |
+          The Edge Cloud Zone to remove from the application deployment.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - edgeCloudZoneId
+              properties:
+                edgeCloudZoneId:
+                  $ref: "#/components/schemas/EdgeCloudZoneId"
       responses:
         "200":
-          description: |
-            Successful response, returning the cluster's information.
-            Returns an empty list if no clusters were found or none match
-            the specified query parameters.
+          description: Edge Cloud Zone removed successfully
           headers:
             x-correlator:
               $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
           content:
             application/json:
               schema:
-                type: array
-                maxItems: 100
-                items:
-                  $ref: "#/components/schemas/ClusterInfo"
+                $ref: "#/components/schemas/AppDeploymentInfo"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+          $ref: "#/components/responses/Generic403"
+        "404":
+          description: |
+            The application deployment, or the given Edge Cloud Zone within
+            it, was not found.
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              example:
+                status: 404
+                code: NOT_FOUND
+                message: "Edge Cloud Zone not found in the deployment"
         "500":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
         "503":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic503"
+
+  /deployments/{appDeploymentId}/add-kubernetes-cluster:
+    post:
+      security:
+        - openId:
+            - edge-application-management:deployments:update
+      tags:
+        - Application
+      summary: Add a Kubernetes cluster to an Application Deployment
+      description: |
+        Add a specific Kubernetes cluster, within an Edge Cloud Zone already
+        part of the deployment, to be used by the application deployment.
+      operationId: addKubernetesCluster
+      parameters:
+        - $ref: "#/components/parameters/x-correlator"
+        - name: appDeploymentId
+          in: path
+          description: |
+            Identifier of the specific application deployment to be
+            extended.
+          required: true
+          schema:
+            $ref: "#/components/schemas/AppDeploymentId"
+      requestBody:
+        description: |
+          The Kubernetes cluster to add to the application deployment.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - kubernetesClusterRef
+              properties:
+                kubernetesClusterRef:
+                  $ref: "#/components/schemas/KubernetesClusterRef"
+      responses:
+        "200":
+          description: Kubernetes cluster added successfully
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppDeploymentInfo"
+        "400":
+          $ref: "#/components/responses/Generic400"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          $ref: "#/components/responses/Generic404"
+        "409":
+          description: Conflict
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              example:
+                status: 409
+                code: ALREADY_EXISTS
+                message: "Kubernetes cluster already part of the deployment"
+        "500":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+        "503":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic503"
+
+  /deployments/{appDeploymentId}/remove-kubernetes-cluster:
+    post:
+      security:
+        - openId:
+            - edge-application-management:deployments:update
+      tags:
+        - Application
+      summary: Remove a Kubernetes cluster from an Application Deployment
+      description: |
+        Stop using the given Kubernetes cluster for the application
+        deployment.
+      operationId: removeKubernetesCluster
+      parameters:
+        - $ref: "#/components/parameters/x-correlator"
+        - name: appDeploymentId
+          in: path
+          description: |
+            Identifier of the specific application deployment to be
+            reduced.
+          required: true
+          schema:
+            $ref: "#/components/schemas/AppDeploymentId"
+      requestBody:
+        description: |
+          The Kubernetes cluster to remove from the application deployment.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - kubernetesClusterRef
+              properties:
+                kubernetesClusterRef:
+                  $ref: "#/components/schemas/KubernetesClusterRef"
+      responses:
+        "200":
+          description: Kubernetes cluster removed successfully
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppDeploymentInfo"
+        "400":
+          $ref: "#/components/responses/Generic400"
+        "401":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/Generic403"
+        "404":
+          description: |
+            The application deployment, or the given Kubernetes cluster
+            within it, was not found.
+          headers:
+            x-correlator:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInfo"
+              example:
+                status: 404
+                code: NOT_FOUND
+                message: "Kubernetes cluster not found in the deployment"
+        "500":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
+        "503":
+          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic503"
+
   /edge-cloud-zones:
     get:
       security:
@@ -1064,50 +1160,81 @@ paths:
             - edge-application-management:edge-cloud-zones:read
       tags:
         - Edge Cloud
-      summary: Retrieve a list of the provider's Edge Cloud Zones and their status
+      summary: Retrieve a paginated list of the provider's Edge Cloud Zones
       description: |
-        List of the provider's Edge Cloud Zones and their
-        status, ordering the results by location and filtering by
-        status (active/inactive/unknown)
+        List of the provider's Edge Cloud Zones, including their status and,
+        when applicable, the Kubernetes clusters available within each zone.
+        Results can be filtered by country code, Edge Cloud Provider,
+        Edge Cloud Provider-specific region and status, and are returned as
+        a paginated collection.
       operationId: getEdgeCloudZones
       parameters:
         - $ref: "#/components/parameters/x-correlator"
-        - name: region
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/page"
+        - $ref: "../common/CAMARA_common.yaml#/components/parameters/perPage"
+        - name: countryCode
           description: |
-            Human readable name of the geographical Edge Cloud Region of
-            the Edge Cloud. Defined by the Edge Cloud Provider.
+            ISO 3166-1 alpha-2 country code to filter Edge Cloud Zones by
+            their geographical location, independent of any Edge Cloud
+            Provider-specific region naming.
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/CountryCode"
+        - name: edgeCloudProvider
+          description: |
+            Human readable name of the Edge Cloud Provider to filter Edge
+            Cloud Zones by.
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/EdgeCloudProvider"
+        - name: edgeCloudRegion
+          description: |
+            Edge Cloud Provider-specific geographical region name to filter
+            Edge Cloud Zones by. Since this value is not standardized across
+            Edge Cloud Providers, prefer filtering by countryCode when
+            provider-independent results are needed.
           in: query
           required: false
           schema:
             $ref: "#/components/schemas/EdgeCloudRegion"
         - name: status
-          description: Human readable status of the Edge Cloud Zone
+          description: |
+            Status of the Edge Cloud Zone to filter by. If omitted, Edge
+            Cloud Zones are returned regardless of their status.
           in: query
           required: false
           schema:
-            $ref: "#/components/schemas/EdgeCloudZoneStatus"
+            type: string
+            enum:
+              - active
+              - inactive
+              - unknown
       responses:
         "200":
           description: |
-            Successful response, returning the
-            Available Edge Cloud Zones.
+            Successful response, returning a paginated list of the Edge
+            Cloud Zones matching the specified query parameters.
           headers:
             x-correlator:
               $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+            x-total-count:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-total-count"
+            x-total-pages:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/x-total-pages"
+            link:
+              $ref: "../common/CAMARA_common.yaml#/components/headers/link"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EdgeCloudZones"
+                $ref: "#/components/schemas/EdgeCloudZoneList"
         "400":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+          $ref: "#/components/responses/Generic400"
         "401":
           $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
         "403":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
-        "500":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic500"
-        "503":
-          $ref: "../common/CAMARA_common.yaml#/components/responses/Generic503"
+          $ref: "#/components/responses/Generic403"
 components:
   securitySchemes:
     openId:
@@ -1129,6 +1256,83 @@ components:
         Correlation id for the different services
       schema:
         $ref: "#/components/schemas/XCorrelator"
+
+  responses:
+    Generic400:
+      description: Bad Request
+      headers:
+        x-correlator:
+          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 400
+                  code:
+                    enum:
+                      - INVALID_ARGUMENT
+          examples:
+            GENERIC_400_INVALID_ARGUMENT:
+              description: Invalid Argument. Generic Syntax Exception
+              value:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param.
+    Generic403:
+      description: Forbidden
+      headers:
+        x-correlator:
+          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 403
+                  code:
+                    enum:
+                      - PERMISSION_DENIED
+          examples:
+            GENERIC_403_PERMISSION_DENIED:
+              description: Permission denied. OAuth2 token access does not have the required scope or when the user fails operational security
+              value:
+                status: 403
+                code: PERMISSION_DENIED
+                message: Client does not have sufficient permissions to perform this action.
+    Generic404:
+      description: Not found
+      headers:
+        x-correlator:
+          $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "../common/CAMARA_common.yaml#/components/schemas/ErrorInfo"
+              - type: object
+                properties:
+                  status:
+                    enum:
+                      - 404
+                  code:
+                    enum:
+                      - NOT_FOUND
+          examples:
+            GENERIC_404_NOT_FOUND:
+              description: Resource is not found
+              value:
+                status: 404
+                code: NOT_FOUND
+                message: The specified resource is not found.
 
   callbacks:
     onAppInstanceStatusChange:
@@ -1164,11 +1368,11 @@ components:
                 x-correlator:
                   $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
             "400":
-              $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+              $ref: "#/components/responses/Generic400"
             "401":
               $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
             "403":
-              $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+              $ref: "#/components/responses/Generic403"
             "410":
               $ref: "../common/CAMARA_common.yaml#/components/responses/Generic410"
             "429":
@@ -1206,11 +1410,11 @@ components:
                 x-correlator:
                   $ref: "../common/CAMARA_common.yaml#/components/headers/x-correlator"
             "400":
-              $ref: "../common/CAMARA_common.yaml#/components/responses/Generic400"
+              $ref: "#/components/responses/Generic400"
             "401":
               $ref: "../common/CAMARA_common.yaml#/components/responses/Generic401"
             "403":
-              $ref: "../common/CAMARA_common.yaml#/components/responses/Generic403"
+              $ref: "#/components/responses/Generic403"
             "410":
               $ref: "../common/CAMARA_common.yaml#/components/responses/Generic410"
             "429":
@@ -1454,6 +1658,14 @@ components:
           maxItems: 100
           items:
             $ref: "#/components/schemas/AppInstanceId"
+        kubernetesClusterRefs:
+          description: |
+            List of Kubernetes clusters used by this deployment, when
+            applicable.
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/KubernetesClusterRef"
 
     AppInstanceInfo:
       description: Information about the application instance.
@@ -1718,26 +1930,24 @@ components:
 
     ClusterInfo:
       type: object
-      description: Kubernetes cluster information
+      description: |
+        Kubernetes cluster information. Returned nested within the Edge
+        Cloud Zone it belongs to, so identifiers already provided by the
+        enclosing Edge Cloud Zone (zone id, region) are not repeated here.
       required:
         - name
-        - provider
+        - edgeCloudProvider
         - clusterRef
-        - edgeCloudZoneId
       properties:
         name:
           type: string
           maxLength: 64
           description: |
-            Name of the Cluster, scoped to the Provider
-        provider:
-          $ref: "#/components/schemas/AppProvider"
+            Name of the Cluster, scoped to the Edge Cloud Provider
+        edgeCloudProvider:
+          $ref: "#/components/schemas/EdgeCloudProvider"
         clusterRef:
           $ref: "#/components/schemas/KubernetesClusterRef"
-        edgeCloudZoneId:
-          $ref: "#/components/schemas/EdgeCloudZoneId"
-        edgeCloudRegion:
-          $ref: "#/components/schemas/EdgeCloudRegion"
         version:
           type: string
           maxLength: 64
@@ -1751,6 +1961,17 @@ components:
             $ref: "#/components/schemas/KubernetesNodePool"
           minItems: 1
 
+    CountryCode:
+      type: string
+      pattern: ^[A-Z]{2}$
+      minLength: 2
+      maxLength: 2
+      description: |
+        ISO 3166-1 alpha-2 country code representing the geographical
+        location of the Edge Cloud Zone, independent of any Edge Cloud
+        Provider-specific region naming.
+      example: "GB"
+
     EdgeCloudProvider:
       type: string
       maxLength: 64
@@ -1763,15 +1984,25 @@ components:
         Human readable name of the geographical Edge Cloud Region of
         the Edge Cloud. Defined by the Edge Cloud Provider.
 
-    EdgeCloudZones:
-      type: array
-      items:
-        $ref: "#/components/schemas/EdgeCloudZone"
-      minItems: 1
-      maxItems: 100
+    EdgeCloudZoneList:
+      type: object
       description: |
-        A collection of Edge Cloud Zones where the Application Provider can
-        instantiate an Application Instance.
+        A paginated collection of Edge Cloud Zones where the Application
+        Provider can instantiate an Application Instance.
+      required:
+        - edgeCloudZones
+        - pagination
+      properties:
+        edgeCloudZones:
+          description: |
+            The Edge Cloud Zones matching the specified query parameters,
+            for the requested page.
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/EdgeCloudZone"
+        pagination:
+          $ref: "../common/CAMARA_common.yaml#/components/schemas/Pagination"
 
     EdgeCloudZoneId:
       type: string
@@ -1795,6 +2026,7 @@ components:
         - edgeCloudZoneId
         - edgeCloudZoneName
         - edgeCloudProvider
+        - countryCode
       properties:
         edgeCloudZoneId:
           $ref: "#/components/schemas/EdgeCloudZoneId"
@@ -1806,6 +2038,17 @@ components:
           $ref: "#/components/schemas/EdgeCloudProvider"
         edgeCloudRegion:
           $ref: "#/components/schemas/EdgeCloudRegion"
+        countryCode:
+          $ref: "#/components/schemas/CountryCode"
+        clusters:
+          description: |
+            Kubernetes clusters available within this Edge Cloud Zone, when
+            applicable. Omitted or empty if the Edge Cloud Provider does not
+            offer Kubernetes clusters in this zone.
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/ClusterInfo"
 
     EdgeCloudZoneName:
       type: string
