@@ -35,17 +35,6 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getAppDeployme
     And information of all existing app deployments of given app is returned
     And the response body is an array complying with the OAS schema at "/components/schemas/AppDeploymentInfo"
   # Errors
-  # Error 404
-  @eam_getAppDeployments_404.1_not_found_filtered_by_appId
-  Scenario: Get a list of application deployments info with a non-existing appId
-    Given the query parameter "appId" is set to a random UUID
-    When the request "getAppDeployments" is sent
-    Then the response status code is 404
-    And the response header "Content-Type" is "application/json"
-    And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response property "$.status" is 404
-    And the response property "$.code" is "NOT_FOUND"
-    And the response property "$.message" contains a user friendly text
   # Error 401
   @eam_getAppDeployments_401.1_missing_access_token
   Scenario: Missing access token
