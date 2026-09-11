@@ -101,19 +101,51 @@ The API definition(s) are based on
 
 ### Added
 
-* N/A
+- Pagination support for `GET /edge-cloud-zones` (`page`/`perPage` params, `x-total-count`/`x-total-pages`/`link` headers, new `EdgeCloudZoneList` schema), plus
+`countryCode` and `edgeCloudProvider` filters (#79).
+- Four explicit action endpoints to manage deployment membership: `POST/deployments/{id}/add-edge-cloud-zone`, `remove-edge-cloud-zone`, `add-kubernetes-
+cluster` and `remove-kubernetes-cluster` (#80).
+- `clusterRef` query parameter on `getEdgeCloudZones` to locate the zone containinga given cluster (#81).
+- `oneOf` schemas (`AppInstanceZoneRequest`/`AppInstanceClusterRequest`,`AppDeploymentZoneRequest`/`AppDeploymentClusterRequest`) enforcing mutually
+- exclusive zone-based vs. cluster-based placement (#81).
+- "Terminology and external references", "Application Lifecycle" and "ApplicationInstance vs. Application Deployment" documentation sections in the API description
+(#82, #83).
+- `409 INCOMPATIBLE_STATE` response documented for `deleteAppInstance` when calledon a deployment-owned instance (#83).
 
 ### Changed
 
-* N/A
+- Restricted documented error responses on all operations to only the applicable
+error codes; removed `500`/`503` and non-applicable `400`/`403`/`404` sub-codes,
+introducing local `Generic400`/`Generic403`/`Generic404` components (#78).
+- Redesigned `GET /edge-cloud-zones`: clusters are now returned as an optional
+nested `clusters` array inside each `EdgeCloudZone` instead of via a separate
+endpoint; removed default `unknown` value from the `status` filter (#79).
+- Renamed `ClusterInfo.provider` to `edgeCloudProvider` and fixed it to reference
+`EdgeCloudProvider` instead of `AppProvider`; later removed as redundant with the
+enclosing zone's value (#79, #81).
+- Renamed `ClusterInfo.clusterRef` / query parameter to `kubernetesClusterRef`,
+`K8sAddons`/`K8sNetworking` to `KubernetesAddons`/`KubernetesNetworking`,
+`AppManifest.appRepo` to `AppManifest.repository`, and `infraKind` to
+`infrastructureKind` for terminology consistency (#82).
+- The four deployment action endpoints now return `409 INCOMPATIBLE_STATE` when
+invoked on a deployment of the wrong placement type (#81).
 
 ### Fixed
 
-* N/A
+- Corrected path casing to kebab-case (e.g. `add-edge-cloud-zone`) to comply with
+CAMARA validation rule S-008 (#80).
+- Removed 3 phantom `404` test scenarios from `getApps`, `getAppDeployments` and
+`getClusters` feature files that should return `200` with an empty list (#78).
+- Removed two unused callback operation tags rendering as empty tag groups in
+documentation tools (#82).
 
 ### Removed
 
-* N/A
+- Removed the standalone `GET /clusters` endpoint (`getClusters` operation);
+cluster data is now nested in `EdgeCloudZone` (#79).
+- Removed the ambiguous `PATCH /deployments/{appDeploymentId}`
+(`updateAppDeployment`) operation, replaced by explicit add/remove action endpoints
+(#80).
 
 **Full Changelog**: https://github.com/camaraproject/EdgeApplicationManagement/commits/r1.2
 
