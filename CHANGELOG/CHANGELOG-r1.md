@@ -110,7 +110,7 @@ The API definition(s) are based on
 `countryCode` and `edgeCloudProvider` filters (#79).
 - Four explicit action endpoints to manage deployment membership: `POST/deployments/{id}/add-edge-cloud-zone`, `remove-edge-cloud-zone`, `add-kubernetes-
 cluster` and `remove-kubernetes-cluster` (#80).
-- `clusterRef` query parameter on `getEdgeCloudZones` to locate the zone containinga given cluster (#81).
+- `clusterRef` query parameter on `getEdgeCloudZones` to locate the zone containing a given cluster (#81).
 - `oneOf` schemas (`AppInstanceZoneRequest`/`AppInstanceClusterRequest`,`AppDeploymentZoneRequest`/`AppDeploymentClusterRequest`) enforcing mutually
 - exclusive zone-based vs. cluster-based placement (#81).
 - "Terminology and external references", "Application Lifecycle" and "ApplicationInstance vs. Application Deployment" documentation sections in the API description
