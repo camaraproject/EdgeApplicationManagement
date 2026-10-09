@@ -95,6 +95,8 @@ The API definition(s) are based on
 
 **edge-application-management 0.1.0-rc.1 is the first release-candidate version of this API.**
 
+Note for users of 0.1.0-alpha.1: this version is not backward compatible with the alpha. Main differences: `/appinstances` is renamed to `/app-instances` (https://github.com/camaraproject/EdgeApplicationManagement/pull/58), `PATCH /deployments/{appDeploymentId}` is replaced by explicit action endpoints (https://github.com/camaraproject/EdgeApplicationManagement/pull/80), `GET /clusters` is removed and cluster information is part of `GET /edge-cloud-zones` (https://github.com/camaraproject/EdgeApplicationManagement/pull/79), placement request bodies are redesigned (https://github.com/camaraproject/EdgeApplicationManagement/pull/81), and several properties and parameters are renamed (https://github.com/camaraproject/EdgeApplicationManagement/pull/82).
+
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/EdgeApplicationManagement/r1.2/code/API_definitions/edge-application-management.yaml&nocors)
   - [View it on Swagger Editor](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/EdgeApplicationManagement/r1.2/code/API_definitions/edge-application-management.yaml)
@@ -106,51 +108,43 @@ The API definition(s) are based on
 
 ### Added
 
-- Pagination support for `GET /edge-cloud-zones` (`page`/`perPage` params, `x-total-count`/`x-total-pages`/`link` headers, new `EdgeCloudZoneList` schema), plus
-`countryCode` and `edgeCloudProvider` filters (#79).
-- Four explicit action endpoints to manage deployment membership: `POST/deployments/{id}/add-edge-cloud-zone`, `remove-edge-cloud-zone`, `add-kubernetes-
-cluster` and `remove-kubernetes-cluster` (#80).
-- `clusterRef` query parameter on `getEdgeCloudZones` to locate the zone containing a given cluster (#81).
-- `oneOf` schemas (`AppInstanceZoneRequest`/`AppInstanceClusterRequest`,`AppDeploymentZoneRequest`/`AppDeploymentClusterRequest`) enforcing mutually
-- exclusive zone-based vs. cluster-based placement (#81).
-- "Terminology and external references", "Application Lifecycle" and "ApplicationInstance vs. Application Deployment" documentation sections in the API description
-(#82, #83).
-- `409 INCOMPATIBLE_STATE` response documented for `deleteAppInstance` when calledon a deployment-owned instance (#83).
+* Edge Application Management API definition by @JoseMConde in https://github.com/camaraproject/EdgeApplicationManagement/pull/11, with resource model aligned by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/58
+  * Applications: `submitApp`, `getApps`, `getApp`, `deleteApp`
+  * Application instances: `createAppInstance`, `getAppInstances`, `getAppInstance`, `deleteAppInstance`
+  * Application deployments: `createAppDeployment`, `getAppDeployments`, `getAppDeployment`, `deleteAppDeployment`
+* Zone-based or cluster-based placement of application instances and deployments by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/81
+  * `createAppInstance` and `createAppDeployment` request bodies are a `oneOf` of `AppInstanceZoneRequest`/`AppInstanceClusterRequest` and `AppDeploymentZoneRequest`/`AppDeploymentClusterRequest`
+  * Applications requiring Kubernetes resources are placed on Kubernetes clusters, other applications on edge cloud zones
+* Action endpoints to add or remove edge cloud zones and Kubernetes clusters of a deployment by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/80 and https://github.com/camaraproject/EdgeApplicationManagement/pull/81
+  * `POST /deployments/{appDeploymentId}/add-edge-cloud-zone`, `/remove-edge-cloud-zone`, `/add-kubernetes-cluster`, `/remove-kubernetes-cluster`
+  * `409 INCOMPATIBLE_STATE` when the action does not match the placement type of the deployment
+* Edge cloud zone discovery with pagination, filters and cluster information by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/79
+  * `GET /edge-cloud-zones` with `page`/`perPage` and `x-total-count`, `x-total-pages`, `link` response headers
+  * Filters `countryCode`, `edgeCloudProvider`, `edgeCloudRegion`, `status`, `kubernetesClusterRef`
+  * Clusters returned as optional `clusters` array in each `EdgeCloudZone`
+* Status change notifications for application instances and deployments by @JoseMConde in https://github.com/camaraproject/EdgeApplicationManagement/pull/11, with callback body corrected by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/59
+  * `onAppInstanceStatusChange` and `onAppDeploymentStatusChange` callbacks
+  * Credential fields (`AppManifest.repository.credentials`, `AccessTokenCredential.accessToken`) are `writeOnly` (https://github.com/camaraproject/EdgeApplicationManagement/pull/55)
+* Error responses per operation following the CAMARA API Design Guide by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/56 and https://github.com/camaraproject/EdgeApplicationManagement/pull/78
+  * Only the error codes applicable to each operation are documented
+  * `409 INCOMPATIBLE_STATE` for `deleteApp` while instances of the application exist, and for `deleteAppInstance` on an instance that belongs to a deployment (https://github.com/camaraproject/EdgeApplicationManagement/pull/83)
+* API documentation in `info.description` by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/82 and https://github.com/camaraproject/EdgeApplicationManagement/pull/83
+  * Terminology and external references, application lifecycle, application instance vs. application deployment
+* Based on Commonalities r4.4 (0.9.0) and Identity and Consent Management r4.2 (0.5.0) by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/86
+* Test definitions for all operations by @JoseMConde in https://github.com/camaraproject/EdgeApplicationManagement/pull/12, updated by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/61, https://github.com/camaraproject/EdgeApplicationManagement/pull/62 and https://github.com/camaraproject/EdgeApplicationManagement/pull/63
+* User story by @JoseMConde in https://github.com/camaraproject/EdgeApplicationManagement/pull/13
 
 ### Changed
 
-- Restricted documented error responses on all operations to only the applicable
-error codes; removed `500`/`503` and non-applicable `400`/`403`/`404` sub-codes,
-introducing local `Generic400`/`Generic403`/`Generic404` components (#78).
-- Redesigned `GET /edge-cloud-zones`: clusters are now returned as an optional
-nested `clusters` array inside each `EdgeCloudZone` instead of via a separate
-endpoint; removed default `unknown` value from the `status` filter (#79).
-- Renamed `ClusterInfo.provider` to `edgeCloudProvider` and fixed it to reference
-`EdgeCloudProvider` instead of `AppProvider`; later removed as redundant with the
-enclosing zone's value (#79, #81).
-- Renamed `ClusterInfo.clusterRef` / query parameter to `kubernetesClusterRef`,
-`K8sAddons`/`K8sNetworking` to `KubernetesAddons`/`KubernetesNetworking`,
-`AppManifest.appRepo` to `AppManifest.repository`, and `infraKind` to
-`infrastructureKind` for terminology consistency (#82).
-- The four deployment action endpoints now return `409 INCOMPATIBLE_STATE` when
-invoked on a deployment of the wrong placement type (#81).
+* N/A
 
 ### Fixed
 
-- Corrected path casing to kebab-case (e.g. `add-edge-cloud-zone`) to comply with
-CAMARA validation rule S-008 (#80).
-- Removed 3 phantom `404` test scenarios from `getApps`, `getAppDeployments` and
-`getClusters` feature files that should return `200` with an empty list (#78).
-- Removed two unused callback operation tags rendering as empty tag groups in
-documentation tools (#82).
+* N/A
 
 ### Removed
 
-- Removed the standalone `GET /clusters` endpoint (`getClusters` operation);
-cluster data is now nested in `EdgeCloudZone` (#79).
-- Removed the ambiguous `PATCH /deployments/{appDeploymentId}`
-(`updateAppDeployment`) operation, replaced by explicit add/remove action endpoints
-(#80).
+* N/A
 
 **Full Changelog**: https://github.com/camaraproject/EdgeApplicationManagement/commits/r1.2
 
