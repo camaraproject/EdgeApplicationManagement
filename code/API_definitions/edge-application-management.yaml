@@ -578,11 +578,11 @@ paths:
         application whose `infrastructureKind` is `kubernetes`, providing both, or
         providing neither, all result in a `400 INVALID_ARGUMENT` response.
 
-        If `subscriptionRequest.sink` is provided but the Edge Cloud
+        If `sink` is provided but the Edge Cloud
         Platform does not support event notification delivery, the request
         is rejected with `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED` and the
         application instance is NOT created; the API consumer may retry
-        without `subscriptionRequest`. If event delivery is accepted,
+        without `sink` (and `sinkCredential`). If event delivery is accepted,
         `sink` is echoed back in the response.
       operationId: createAppInstance
       parameters:
@@ -840,11 +840,11 @@ paths:
         application whose `infrastructureKind` is `kubernetes`, providing both, or
         providing neither, all result in a `400 INVALID_ARGUMENT` response.
 
-        If `subscriptionRequest.sink` is provided but the Edge Cloud
+        If `sink` is provided but the Edge Cloud
         Platform does not support event notification delivery, the request
         is rejected with `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED` and the
         application deployment is NOT created; the API consumer may retry
-        without `subscriptionRequest`. If event delivery is accepted,
+        without `sink` (and `sinkCredential`). If event delivery is accepted,
         `sink` is echoed back in the response.
       operationId: createAppDeployment
       parameters:
@@ -1473,16 +1473,9 @@ paths:
 components:
   securitySchemes:
     openId:
-      description: OpenID Provider Configuration Information.
-      type: openIdConnect
-      openIdConnectUrl: https://example.com/.well-known/openid-configuration
+      $ref: "../common/CAMARA_common.yaml#/components/securitySchemes/openId"
     notificationsBearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: "{$request.body#/sinkCredential.credentialType}"
-      description: |
-        Bearer token for notification delivery. Token format is determined
-        by `sinkCredential.credentialType` in the subscription request.
+      $ref: "../common/CAMARA_event_common.yaml#/components/securitySchemes/notificationsBearerAuth"
   parameters:
     x-correlator:
       name: x-correlator
@@ -1522,11 +1515,7 @@ components:
             GENERIC_400_INVALID_TOKEN:
               $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_400_INVALID_TOKEN"
             GENERIC_400_INVALID_CREDENTIAL:
-              description: Invalid sink credential type
-              value:
-                status: 400
-                code: INVALID_CREDENTIAL
-                message: Only Access token is supported
+              $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_400_INVALID_CREDENTIAL"
 
     CreateAppDeploymentBadRequest400:
       description: Problem with the client request
@@ -1557,11 +1546,7 @@ components:
             GENERIC_400_INVALID_TOKEN:
               $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_400_INVALID_TOKEN"
             GENERIC_400_INVALID_CREDENTIAL:
-              description: Invalid sink credential type
-              value:
-                status: 400
-                code: INVALID_CREDENTIAL
-                message: Only Access token is supported
+              $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_400_INVALID_CREDENTIAL"
 
     EventNotificationsNotSupported422:
       description: Unprocessable Content
@@ -1580,14 +1565,17 @@ components:
                       - 422
                   code:
                     enum:
+                      - PRIVATE_KEY_JWT_NOT_CONFIGURED
                       - EVENT_NOTIFICATIONS_NOT_SUPPORTED
           examples:
+            GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED:
+              $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_422_PRIVATE_KEY_JWT_NOT_CONFIGURED"
             GENERIC_422_EVENT_NOTIFICATIONS_NOT_SUPPORTED:
               $ref: "../common/CAMARA_event_common.yaml#/components/examples/GENERIC_422_EVENT_NOTIFICATIONS_NOT_SUPPORTED"
 
   callbacks:
     onAppInstanceStatusChange:
-      "{$request.body#/subscriptionRequest/sink}":
+      "{$request.body#/sink}":
         post:
           summary:
             Provide a notification for a change in status of the instantiated
@@ -1596,7 +1584,7 @@ components:
             Instantiating an application is an asynchronous task. After the application status changes,
             the server will return a callback response at the specified URL.
 
-            **WARNING**: This callback endpoint must be exposed on the listener side as `POST {$request.body#/subscriptionRequest/sink}`
+            **WARNING**: This callback endpoint must be exposed on the listener side as `POST {$request.body#/sink}`
           operationId: EdgeApplicationManagementCallback
           parameters:
             - $ref: "#/components/parameters/x-correlator"
@@ -1609,7 +1597,7 @@ components:
             content:
               application/cloudevents+json:
                 schema:
-                  $ref: "#/components/schemas/CloudEvent"
+                  $ref: "#/components/schemas/ApiNotificationEvent"
           responses:
             "204":
               description: Successful notification - No Content
@@ -1628,7 +1616,7 @@ components:
               $ref: "../common/CAMARA_common.yaml#/components/responses/TooManyRequests429"
 
     onAppDeploymentStatusChange:
-      "{$request.body#/subscriptionRequest/sink}":
+      "{$request.body#/sink}":
         post:
           summary: Provide a notification for a change in status of the deployed
             application
@@ -1636,7 +1624,7 @@ components:
             Deploying an application is an asynchronous task. After the application deployment status changes,
             the server will return a callback response at the specified URL.
 
-            **WARNING**: This callback endpoint must be exposed on the listener side as `POST {$request.body#/subscriptionRequest/sink}`
+            **WARNING**: This callback endpoint must be exposed on the listener side as `POST {$request.body#/sink}`
           operationId: EdgeApplicationManagementDeploymentCallback
           parameters:
             - $ref: "#/components/parameters/x-correlator"
@@ -1649,7 +1637,7 @@ components:
             content:
               application/cloudevents+json:
                 schema:
-                  $ref: "#/components/schemas/CloudEvent"
+                  $ref: "#/components/schemas/ApiNotificationEvent"
           responses:
             "204":
               description: Successful notification - No Content
@@ -1668,90 +1656,92 @@ components:
               $ref: "../common/CAMARA_common.yaml#/components/responses/TooManyRequests429"
 
   schemas:
-    CloudEvent:
-      $ref: "../common/CAMARA_event_common.yaml#/components/schemas/CloudEvent"
-
-    SubscriptionEventType:
+    ApiEventType:
       type: string
       description: |
-        Event-type that could be subscribed through this subscription. Several event-type could be defined.
+        Enum of API-specific event type strings for this API project.
         - `org.camaraproject.edge-application-management.v0.app-instance-status-change`: The status of an application instance has changed.
         - `org.camaraproject.edge-application-management.v0.app-deployment-status-change`: The status of an application deployment has changed.
-        - `org.camaraproject.edge-application-management.v0.subscription-ended`: The subscription has ended.
       enum:
         - org.camaraproject.edge-application-management.v0.app-instance-status-change
         - org.camaraproject.edge-application-management.v0.app-deployment-status-change
-        - org.camaraproject.edge-application-management.v0.subscription-ended
 
-    SubscriptionRequest:
-      description:
-        The request for creating an event-type event subscription (implicit
-        subscription, HTTP only)
-      type: object
-      additionalProperties: false
-      required:
-        - sink
-      properties:
-        sink:
-          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
-        sinkCredential:
-          $ref: "#/components/schemas/AppEventSinkCredential"
-        types:
-          description: |
-            Camara Event types eligible to be delivered by this subscription.
-            Exactly one event type is required per subscription.
-          type: array
-          minItems: 1
-          maxItems: 1
-          items:
-            $ref: "#/components/schemas/SubscriptionEventType"
-        config:
-          $ref: "#/components/schemas/SubscriptionConfig"
-
-    SubscriptionConfig:
+    ApiNotificationEvent:
       description: |
-        Implementation-specific configuration parameters needed by the subscription manager for acquiring events.
-        Extends the Commonalities-owned `ConfigBase` (`subscriptionExpireTime`, `subscriptionMaxEvents`) with the
-        API-specific `subscriptionDetail` and the optional `initialEvent` property.
-        Note: if a request is performed for several event type, all subscribed event will use same `config` parameters.
+        API-specific notification event group.
+        Extends the CloudEvent envelope and constrains `type` to the set of
+        event types defined by this API project.
       allOf:
-        - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/ConfigBase"
-        - type: object
-          required:
-            - subscriptionDetail
-          properties:
-            subscriptionDetail:
-              $ref: "#/components/schemas/CreateSubscriptionDetail"
-            initialEvent:
-              type: boolean
-              description: |
-                Set to `true` by API consumer if consumer wants to get an event as soon as the subscription is created and current situation reflects event request.
-                Example: If initialEvent is set to true and application is in a specific status, an event is triggered.
-
-    CreateSubscriptionDetail:
-      description: The detail of the requested event subscription.
-      type: object
-
-    AppEventSinkCredential:
-      description: |
-        A sink credential provides authentication or authorization
-        information necessary to enable delivery of events to a target.
-        Only ACCESSTOKEN credentials are currently supported by this API.
-      allOf:
-        - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/AccessTokenCredential"
+        - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/CloudEvent"
         - type: object
           properties:
-            credentialType:
-              enum:
-                - ACCESSTOKEN
-            accessTokenExpiresUtc:
-              description: |
-                An absolute (UTC) timestamp at which the token shall be considered expired.
-                Token expiration SHOULD occur after the expiration of the application instance
-                or deployment, allowing the client to be notified of any changes during its
-                existence. If the token expires while the application instance or deployment
-                is still active, the client will stop receiving notifications.
-                It must follow [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) and must have time zone.
+            type:
+              $ref: "#/components/schemas/ApiEventType"
+      discriminator:
+        propertyName: "type"
+        mapping:
+          org.camaraproject.edge-application-management.v0.app-instance-status-change: "#/components/schemas/AppInstanceStatusChangeEvent"
+          org.camaraproject.edge-application-management.v0.app-deployment-status-change: "#/components/schemas/AppDeploymentStatusChangeEvent"
+
+    AppInstanceStatusChangeEvent:
+      description: Event structure for a change in status of an application instance.
+      allOf:
+        - $ref: "#/components/schemas/ApiNotificationEvent"
+        - type: object
+          properties:
+            data:
+              type: object
+              required:
+                - appInstanceId
+                - status
+              properties:
+                appInstanceId:
+                  $ref: "#/components/schemas/AppInstanceId"
+                status:
+                  description: |
+                    Status of the application instance:
+                    - `ready`: The instance is running and available.
+                    - `instantiating`: The instance is being created.
+                    - `failed`: Instantiation failed, or the instance stopped running unexpectedly.
+                    - `terminating`: The instance is being terminated.
+                    - `unknown`: The status could not be determined.
+                  type: string
+                  enum:
+                    - ready
+                    - instantiating
+                    - failed
+                    - terminating
+                    - unknown
+
+    AppDeploymentStatusChangeEvent:
+      description: Event structure for a change in status of an application deployment.
+      allOf:
+        - $ref: "#/components/schemas/ApiNotificationEvent"
+        - type: object
+          properties:
+            data:
+              type: object
+              required:
+                - appDeploymentId
+                - status
+              properties:
+                appDeploymentId:
+                  $ref: "#/components/schemas/AppDeploymentId"
+                status:
+                  description: |
+                    Status of the application deployment:
+                    - `ready`: The deployment is running and available.
+                    - `instantiating`: The deployment is being created.
+                    - `failed`: Instantiation failed, or the deployment stopped running unexpectedly.
+                    - `terminating`: The deployment is being terminated.
+                    - `unknown`: The status could not be determined.
+                  type: string
+                  enum:
+                    - ready
+                    - instantiating
+                    - failed
+                    - terminating
+                    - unknown
 
     AccessEndpoint:
       type: object
@@ -1846,8 +1836,20 @@ components:
           maxItems: 100
           items:
             $ref: "#/components/schemas/EdgeCloudZoneId"
-        subscriptionRequest:
-          $ref: "#/components/schemas/SubscriptionRequest"
+        sink:
+          description: |
+            The HTTPS URL where event notifications for this deployment will
+            be delivered. Omit this field (and `sinkCredential`) to create
+            the deployment without event notifications.
+
+            If provided, the Edge Cloud Platform SHOULD support event
+            delivery. If notification delivery is not supported, the
+            request MUST be rejected with `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED`
+            and the deployment MUST NOT be created.
+          allOf:
+            - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
+        sinkCredential:
+          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SinkCredential"
 
     AppDeploymentClusterRequest:
       type: object
@@ -1876,8 +1878,20 @@ components:
           maxItems: 100
           items:
             $ref: "#/components/schemas/KubernetesClusterRef"
-        subscriptionRequest:
-          $ref: "#/components/schemas/SubscriptionRequest"
+        sink:
+          description: |
+            The HTTPS URL where event notifications for this deployment will
+            be delivered. Omit this field (and `sinkCredential`) to create
+            the deployment without event notifications.
+
+            If provided, the Edge Cloud Platform SHOULD support event
+            delivery. If notification delivery is not supported, the
+            request MUST be rejected with `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED`
+            and the deployment MUST NOT be created.
+          allOf:
+            - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
+        sinkCredential:
+          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SinkCredential"
 
     AppDeploymentInfo:
       description: Information about the application deployment.
@@ -1898,10 +1912,19 @@ components:
         sink:
           description: |
             The sink URL registered for event notifications on this deployment.
-            Present in the response whenever `subscriptionRequest.sink` was
-            provided in the deployment creation request.
+            Present in the response whenever `sink` was provided in the
+            deployment creation request.
           allOf:
             - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
+        sinkCredential:
+          description: |
+            Sink credential metadata registered for event notifications on
+            this deployment, limited to non-secret metadata only (e.g.
+            `credentialType`). Present in the response whenever
+            `sinkCredential` was provided in the deployment creation
+            request.
+          allOf:
+            - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SinkCredential"
         edgeCloudZones:
           description: |
             List of Edge Cloud Zones where the application is deployed.
@@ -1946,10 +1969,18 @@ components:
         sink:
           description: |
             The sink URL registered for event notifications on this instance.
-            Present in the response whenever `subscriptionRequest.sink` was
-            provided in the instance creation request.
+            Present in the response whenever `sink` was provided in the
+            instance creation request.
           allOf:
             - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
+        sinkCredential:
+          description: |
+            Sink credential metadata registered for event notifications on
+            this instance, limited to non-secret metadata only (e.g.
+            `credentialType`). Present in the response whenever
+            `sinkCredential` was provided in the instance creation request.
+          allOf:
+            - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SinkCredential"
         status:
           description: |
             Status of the application instance (default is 'unknown'):
@@ -2013,8 +2044,20 @@ components:
           $ref: "#/components/schemas/AppId"
         edgeCloudZoneId:
           $ref: "#/components/schemas/EdgeCloudZoneId"
-        subscriptionRequest:
-          $ref: "#/components/schemas/SubscriptionRequest"
+        sink:
+          description: |
+            The HTTPS URL where event notifications for this instance will
+            be delivered. Omit this field (and `sinkCredential`) to create
+            the instance without event notifications.
+
+            If provided, the Edge Cloud Platform SHOULD support event
+            delivery. If notification delivery is not supported, the
+            request MUST be rejected with `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED`
+            and the instance MUST NOT be created.
+          allOf:
+            - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
+        sinkCredential:
+          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SinkCredential"
 
     AppInstanceClusterRequest:
       type: object
@@ -2036,8 +2079,20 @@ components:
           $ref: "#/components/schemas/AppId"
         kubernetesClusterRef:
           $ref: "#/components/schemas/KubernetesClusterRef"
-        subscriptionRequest:
-          $ref: "#/components/schemas/SubscriptionRequest"
+        sink:
+          description: |
+            The HTTPS URL where event notifications for this instance will
+            be delivered. Omit this field (and `sinkCredential`) to create
+            the instance without event notifications.
+
+            If provided, the Edge Cloud Platform SHOULD support event
+            delivery. If notification delivery is not supported, the
+            request MUST be rejected with `422 EVENT_NOTIFICATIONS_NOT_SUPPORTED`
+            and the instance MUST NOT be created.
+          allOf:
+            - $ref: "../common/CAMARA_event_common.yaml#/components/schemas/Sink"
+        sinkCredential:
+          $ref: "../common/CAMARA_event_common.yaml#/components/schemas/SinkCredential"
 
     AppInstanceName:
       type: string
