@@ -108,7 +108,31 @@ The API definition(s) are based on
 
 ### Added
 
-* N/A
+* Edge Application Management API definition by @JoseMConde in https://github.com/camaraproject/EdgeApplicationManagement/pull/11, with resource model aligned by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/58
+  * Applications: `submitApp`, `getApps`, `getApp`, `deleteApp`
+  * Application instances: `createAppInstance`, `getAppInstances`, `getAppInstance`, `deleteAppInstance`
+  * Application deployments: `createAppDeployment`, `getAppDeployments`, `getAppDeployment`, `deleteAppDeployment`
+* Zone-based or cluster-based placement of application instances and deployments by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/81
+  * `createAppInstance` and `createAppDeployment` request bodies are a `oneOf` of `AppInstanceZoneRequest`/`AppInstanceClusterRequest` and `AppDeploymentZoneRequest`/`AppDeploymentClusterRequest`
+  * Applications requiring Kubernetes resources are placed on Kubernetes clusters, other applications on edge cloud zones
+* Action endpoints to add or remove edge cloud zones and Kubernetes clusters of a deployment by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/80 and https://github.com/camaraproject/EdgeApplicationManagement/pull/81
+  * `POST /deployments/{appDeploymentId}/add-edge-cloud-zone`, `/remove-edge-cloud-zone`, `/add-kubernetes-cluster`, `/remove-kubernetes-cluster`
+  * `409 INCOMPATIBLE_STATE` when the action does not match the placement type of the deployment
+* Edge cloud zone discovery with pagination, filters and cluster information by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/79
+  * `GET /edge-cloud-zones` with `page`/`perPage` and `x-total-count`, `x-total-pages`, `link` response headers
+  * Filters `countryCode`, `edgeCloudProvider`, `edgeCloudRegion`, `status`, `kubernetesClusterRef`
+  * Clusters returned as optional `clusters` array in each `EdgeCloudZone`
+* Status change notifications for application instances and deployments by @JoseMConde in https://github.com/camaraproject/EdgeApplicationManagement/pull/11, with callback body corrected by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/59
+  * `onAppInstanceStatusChange` and `onAppDeploymentStatusChange` callbacks
+  * Credential fields (`AppManifest.repository.credentials`, `AccessTokenCredential.accessToken`) are `writeOnly` (https://github.com/camaraproject/EdgeApplicationManagement/pull/55)
+* Error responses per operation following the CAMARA API Design Guide by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/56 and https://github.com/camaraproject/EdgeApplicationManagement/pull/78
+  * Only the error codes applicable to each operation are documented
+  * `409 INCOMPATIBLE_STATE` for `deleteApp` while instances of the application exist, and for `deleteAppInstance` on an instance that belongs to a deployment (https://github.com/camaraproject/EdgeApplicationManagement/pull/83)
+* API documentation in `info.description` by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/82 and https://github.com/camaraproject/EdgeApplicationManagement/pull/83
+  * Terminology and external references, application lifecycle, application instance vs. application deployment
+* Based on Commonalities r4.4 (0.9.0) and Identity and Consent Management r4.2 (0.5.0) by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/86
+* Test definitions for all operations by @JoseMConde in https://github.com/camaraproject/EdgeApplicationManagement/pull/12, updated by @DLondonoD in https://github.com/camaraproject/EdgeApplicationManagement/pull/61, https://github.com/camaraproject/EdgeApplicationManagement/pull/62 and https://github.com/camaraproject/EdgeApplicationManagement/pull/63
+* User story by @JoseMConde in https://github.com/camaraproject/EdgeApplicationManagement/pull/13
 
 ### Changed
 
