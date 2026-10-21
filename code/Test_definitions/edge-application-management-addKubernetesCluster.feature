@@ -1,4 +1,4 @@
-Feature: CAMARA Edge Application Management API, vwip - Operation addKubernetesCluster
+Feature: CAMARA Edge Application Management API, v0.1.0-rc.1 - Operation addKubernetesCluster
   # Input to be provided by the implementation to the tester
   #
   # Implementation indications:
@@ -13,7 +13,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation addKubernetesC
   # References to OAS spec schemas refer to schemas specified in edge-application-management.yaml
   Background: Common addKubernetesCluster setup
     Given an environment at "apiRoot"
-    And the resource "/edge-application-management/vwip/deployments/{appDeploymentId}/add-kubernetes-cluster"
+    And the resource "/edge-application-management/v0.1rc1/deployments/{appDeploymentId}/add-kubernetes-cluster"
     And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
