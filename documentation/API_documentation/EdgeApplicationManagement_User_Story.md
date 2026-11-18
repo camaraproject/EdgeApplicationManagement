@@ -12,7 +12,7 @@ Note: the role of Edge Service Provider may be played by different entities, for
 
 | Item | Description | Support Qualifier |
 |----|----|----|
-|Summary|Network operators offers a Multi-access Edge Computing platform in a given territory with several levels of abstraction being the Edge Cloud Zone the lowest one. Network operators offers a service through EdgeCloud APIs that permits application providers to deploy instances of an application in one or several Edge Cloud Zones, and to Applications Users the posibility to chose the most appropriate Edge Cloud Zone available at a given moment| M |
+|Summary|Network operators offer a Multi-access Edge Computing platform in a given territory with several levels of abstraction being the Edge Cloud Zone the lowest one. Network operators offer a service through EdgeCloud APIs that permits application providers to deploy instances of an application in one or several Edge Cloud Zones, and to Applications Users the possibility to choose the most appropriate Edge Cloud Zone available at a given moment| M |
 |Pre-conditions|The AP has a resource usage agreement with the Operator Platform| M |
 |Begins when|The Application Provider (AP) invokes the Edge Application Management API to submit an application with references to obtain all needed data for their instantiation (container images or VM images and manifests describing required resources by an application)| M |
 |Step 1|The ESP stores the app information and returns an Id for reference (terminates with a notification to the AP if error)| M |

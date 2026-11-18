@@ -8,9 +8,9 @@ info:
     Life Cycle of an Application and to Discover Edge Cloud Zones.
     # Overview
     The reference scenario foresees a distributed Telco Edge Cloud where any
-    Application Delevoper, known as an Application Provider, can host and
+    Application Developer, known as an Application Provider, can host and
     deploy their application according to their specifications and operational
-    criteria (e.g. within an specific geographical zone for data protection
+    criteria (e.g. within a specific geographical zone for data protection
     purposes, ensure a minimum QoS for the application clients, etc).
     Through Telco Edge Cloud services Developers around the globe can be
     benefit from the traditional Cloud strengths but expertise and advantages
@@ -25,14 +25,14 @@ info:
     resource validation and other pre-deployment operations.
     Application details can contain components network specification,
     package type (QCOW2, OVA, CONTAINER, HELM, CSAR), operating system details and
-    respository to download the image of the desired application.
+    repository to download the image of the desired application.
     Once the application is available on the Edge Cloud
     Platform, the Application Provider can instantiate the application.
     Edge Cloud Provider helps Application Provider to decide where to
     instantiate the applications allowing them to retrieve a list of
     Edge Cloud Zones that meets the provided criteria.
 
-    This discovery can be filtered by an specific geographical region
+    This discovery can be filtered by a specific geographical region
     (e.g when data residency is need) and by status (active, inactive, unknown)
     Application Provider can ask the Edge Cloud Platform to instantiate the
     application to one or several Edge Cloud Zones that meet the criteria.
@@ -285,7 +285,7 @@ info:
     or be an independent entity.
     * __Application__ - Contains the information about the application to be
     instantiated. Descriptor, binary image, charts or any other package
-    assosiated with the application. The Application Provider request contains
+    associated with the application. The Application Provider request contains
     mandatory criteria (e.g. required CPU, memory, storage, bandwidth) defined
     in an Application. The Edge Cloud Platform generates a unique ID
     for an Application that is ready to be instantiated.
@@ -489,7 +489,7 @@ paths:
         - name: appId
           in: path
           description: |
-            Identificator of the application to be
+            Identifier of the application to be
             deleted provided by the Edge Cloud Provider
             once the submission was successful
           required: true
@@ -700,7 +700,7 @@ paths:
         - name: appInstanceId
           description: |
             A globally unique identifier associated with a running
-            instance of an application within an specific Edge Cloud Zone.
+            instance of an application within a specific Edge Cloud Zone.
             Edge Cloud Provider generates this identifier.
           in: path
           required: true
@@ -751,7 +751,7 @@ paths:
         - name: appInstanceId
           in: path
           description: |
-            Identificator of the specific application instance
+            Identifier of the specific application instance
             that will be terminated
           required: true
           schema:
@@ -996,7 +996,7 @@ paths:
         - name: appDeploymentId
           in: path
           description: |
-            Identificator of the specific application deployment
+            Identifier of the specific application deployment
             that will be terminated
           required: true
           schema:
@@ -1749,8 +1749,8 @@ components:
     AccessEndpoint:
       type: object
       description: |
-        Application Endpoint for an especific instance that is
-        running in an specific Edge Cloud Zone.
+        Application Endpoint for a specific instance that is
+        running in a specific Edge Cloud Zone.
       required:
         - port
       anyOf:
@@ -2225,7 +2225,7 @@ components:
               type: string
               maxLength: 64
               description: |
-                Username to acces the Helm chart, docker-compose
+                Username to access the Helm chart, docker-compose
                 file or VM image repository
             credentials:
               type: string
@@ -2233,7 +2233,7 @@ components:
               writeOnly: true
               description: |
                 Password or personal access token created by
-                developer to acces the app repository. API users can generate
+                developer to access the app repository. API users can generate
                 a personal access token e.g. docker clients to use them as
                 password.
             authType:
@@ -2693,7 +2693,7 @@ components:
         scalable:
           description: |
             Indicates if the node pool can be dynamically scaled up by the
-            system to accomodate more applications, and dynamically scaled
+            system to accommodate more applications, and dynamically scaled
             down by the system when there are unused resources.
           type: boolean
           example: false
@@ -3107,7 +3107,7 @@ components:
 
     Port:
       type: integer
-      description: Port to stablish the connection
+      description: Port to establish the connection
       format: int32
       minimum: 1
       maximum: 65535
