@@ -44,7 +44,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation deleteApp
     Given there are running instances of the app
     And the request path parameter {appId} is set to an invalid application ID
     When the request "deleteApp" is sent
-    Then response status code is 404
+    Then the response status code is 404
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
     And the response property "$.status" is 404
