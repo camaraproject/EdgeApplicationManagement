@@ -22,7 +22,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation addEdgeCloudZo
   @eam_addEdgeCloudZone_01_generic_success_scenario
   Scenario: Add an Edge Cloud Zone to an existing deployment with mandatory parameters
     Given there is a deployment created by operation createAppDeployment
-    And the request path parameter "$.appDeploymentId" is set to a valid application deployment ID
+    And the request path parameter {appDeploymentId} is set to a valid application deployment ID
     And the request body property "$.edgeCloudZoneId" is set to a valid edge zone id not yet part of the deployment
     When the request "addEdgeCloudZone" is sent
     Then the response status code is 200
@@ -35,7 +35,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation addEdgeCloudZo
   @eam_addEdgeCloudZone_409.1_already_exists
   Scenario: Add an Edge Cloud Zone already part of the deployment
     Given there is a deployment created by operation createAppDeployment
-    And the request path parameter "$.appDeploymentId" is set to a valid application deployment ID
+    And the request path parameter {appDeploymentId} is set to a valid application deployment ID
     And the request body property "$.edgeCloudZoneId" is set to an edge zone id already part of the deployment
     When the request "addEdgeCloudZone" is sent
     Then the response status code is 409
@@ -47,7 +47,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation addEdgeCloudZo
   @eam_addEdgeCloudZone_409.2_incompatible_state
   Scenario: Add an Edge Cloud Zone to a Kubernetes cluster-based deployment
     Given there is a deployment created by operation createAppDeployment with kubernetesClusterRefs
-    And the request path parameter "$.appDeploymentId" is set to a valid application deployment ID
+    And the request path parameter {appDeploymentId} is set to a valid application deployment ID
     And the request body property "$.edgeCloudZoneId" is set to a valid edge zone id
     When the request "addEdgeCloudZone" is sent
     Then the response status code is 409
@@ -80,7 +80,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation addEdgeCloudZo
   # Error 404
   @eam_addEdgeCloudZone_404.1_invalid_parameter
   Scenario: Add an Edge Cloud Zone to a non-existing deployment
-    Given the request path parameter "$.appDeploymentId" is set to an invalid application deployment ID
+    Given the request path parameter {appDeploymentId} is set to an invalid application deployment ID
     When the request "addEdgeCloudZone" is sent
     Then the response status code is 404
     And the response header "x-correlator" has same value as the request header "x-correlator"

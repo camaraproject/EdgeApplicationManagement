@@ -18,7 +18,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getAppInstance
   @eam_getAppInstance_01_generic_success_scenario
   Scenario: Get information of an existing application instance
     Given there is an application instance created by operation createAppInstance
-    And the path parameter "$.appInstanceId" is set to a valid application instance ID
+    And the request path parameter {appInstanceId} is set to a valid application instance ID
     When the request "getAppInstance" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
@@ -33,7 +33,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getAppInstance
   # Error 404
   @eam_getAppInstance_404.1_not_found
   Scenario: Get information of a non-existing application instance
-    Given the path parameter "$.appInstanceId" is set to an invalid application instance ID
+    Given the request path parameter {appInstanceId} is set to an invalid application instance ID
     When the request "getAppInstance" is sent
     Then the response status code is 404
     And the response header "Content-Type" is "application/json"

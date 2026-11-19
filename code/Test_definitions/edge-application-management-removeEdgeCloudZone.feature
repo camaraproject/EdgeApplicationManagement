@@ -22,7 +22,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation removeEdgeClou
   @eam_removeEdgeCloudZone_01_generic_success_scenario
   Scenario: Remove an Edge Cloud Zone from an existing deployment with mandatory parameters
     Given there is a deployment created by operation createAppDeployment
-    And the request path parameter "$.appDeploymentId" is set to a valid application deployment ID
+    And the request path parameter {appDeploymentId} is set to a valid application deployment ID
     And the request body property "$.edgeCloudZoneId" is set to an edge zone id part of the deployment
     When the request "removeEdgeCloudZone" is sent
     Then the response status code is 200
@@ -55,7 +55,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation removeEdgeClou
   # Error 404
   @eam_removeEdgeCloudZone_404.1_invalid_deployment
   Scenario: Remove an Edge Cloud Zone from a non-existing deployment
-    Given the request path parameter "$.appDeploymentId" is set to an invalid application deployment ID
+    Given the request path parameter {appDeploymentId} is set to an invalid application deployment ID
     When the request "removeEdgeCloudZone" is sent
     Then the response status code is 404
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -66,7 +66,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation removeEdgeClou
   @eam_removeEdgeCloudZone_404.2_zone_not_in_deployment
   Scenario: Remove an Edge Cloud Zone not part of the deployment
     Given there is a deployment created by operation createAppDeployment
-    And the request path parameter "$.appDeploymentId" is set to a valid application deployment ID
+    And the request path parameter {appDeploymentId} is set to a valid application deployment ID
     And the request body property "$.edgeCloudZoneId" is set to a valid edge zone id not part of the deployment
     When the request "removeEdgeCloudZone" is sent
     Then the response status code is 404
@@ -79,7 +79,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation removeEdgeClou
   @eam_removeEdgeCloudZone_409.1_incompatible_state
   Scenario: Remove an Edge Cloud Zone from a Kubernetes cluster-based deployment
     Given there is a deployment created by operation createAppDeployment with kubernetesClusterRefs
-    And the request path parameter "$.appDeploymentId" is set to a valid application deployment ID
+    And the request path parameter {appDeploymentId} is set to a valid application deployment ID
     And the request body property "$.edgeCloudZoneId" is set to a valid edge zone id
     When the request "removeEdgeCloudZone" is sent
     Then the response status code is 409

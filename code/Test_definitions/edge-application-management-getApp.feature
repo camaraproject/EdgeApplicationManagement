@@ -22,9 +22,9 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getApp
   @eam_getApp_01_generic_success_scenario
   Scenario: Get information of an existing application
     Given there is an application submitted by operation submitApp
-    And the path parameter "$.appId" is set to a valid application ID
+    And the request path parameter {appId} is set to a valid application ID
     When the request "getApp" is sent
-    Then response code is 200
+    Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "/components/schemas/AppManifestInfo"
@@ -43,7 +43,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getApp
 
   @eam_getApp_404.1_app_not_found
   Scenario: appId of a non-existing application
-    Given the path parameter "appId" is set to a random UUID
+    Given the request path parameter {appId} is set to a random UUID
     When the request "getApp" is sent
     Then the response status code is 404
     And the response header "x-correlator" has same value as the request header "x-correlator"
