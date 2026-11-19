@@ -18,7 +18,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getAppDeployme
   @eam_getAppDeployment_01_generic_success_scenario
   Scenario: Get information of an existing application deployment
     Given there is an application deployment created by operation createAppDeployment
-    And the path parameter "$.appDeploymentId" is set to a valid application deployment ID
+    And the request path parameter {appDeploymentId} is set to a valid application deployment ID
     When the request "getAppDeployment" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
@@ -32,7 +32,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getAppDeployme
   # Error 404
   @eam_getAppDeployment_404.1_not_found
   Scenario: Get information of a non-existing application deployment
-    Given the path parameter "$.appDeploymentId" is set to an invalid application deployment ID
+    Given the request path parameter {appDeploymentId} is set to an invalid application deployment ID
     When the request "getAppDeployment" is sent
     Then the response status code is 404
     And the response header "Content-Type" is "application/json"

@@ -27,7 +27,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getAppDeployme
   @eam_getAppDeployments_02_success_scenario_filtered_by_appId
   Scenario: Get application deployments info with optional query parameter ("appId")
     Given there are application deployments created by operation createAppDeployment
-    And the request query parameter "$.appId" is set to a valid application ID
+    And the request query parameter "appId" is set to a valid application ID
     When the request "getAppDeployments" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"

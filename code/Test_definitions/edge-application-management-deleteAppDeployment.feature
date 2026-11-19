@@ -17,9 +17,9 @@ Feature: CAMARA Edge Application Management API, vwip - Operation deleteAppDeplo
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
   # Success scenarios
   @eam_deleteAppDeployment_01_generic_success_scenario_async
-  Scenario: Delete a running instance of an application within an Edge Cloud Zone with mandatory parameter ("appDeploymentId")
-    Given there are application instances running
-    And the request path parameter "$.appDeploymentId" is set to a valid application deployment ID
+  Scenario: Delete an existing application deployment with mandatory parameter ("appDeploymentId")
+    Given there are application deployments running
+    And the request path parameter {appDeploymentId} is set to a valid application deployment ID
     When the request "deleteAppDeployment" is sent
     Then the response status code is 202
     And the response header "Content-Type" is "application/json"
@@ -28,9 +28,9 @@ Feature: CAMARA Edge Application Management API, vwip - Operation deleteAppDeplo
   # Errors
   # Error 404
   @eam_deleteAppDeployment_404.1_invalid_parameter
-  Scenario: Delete a running instance of an application within an Edge Cloud Zone with mandatory, and non-existing, parameter ("appDeploymentId")
-    Given there are application instances running
-    And the path parameter "$.appDeploymentId" is set to an invalid application instance ID
+  Scenario: Error response for deleting a non-existing application deployment
+    Given there are application deployments running
+    And the request path parameter {appDeploymentId} is set to an invalid application deployment ID
     When the request "deleteAppDeployment" is sent
     Then the response status code is 404
     And the response header "x-correlator" has same value as the request header "x-correlator"

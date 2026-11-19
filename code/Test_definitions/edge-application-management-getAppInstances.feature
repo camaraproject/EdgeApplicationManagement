@@ -25,9 +25,9 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getAppInstance
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "/components/schemas/AppInstanceInfo"
   @eam_getAppInstances_02_success_scenario_filtered_by_appId
-  Scenario: Get application instances info with mandatory parameter ("appId")
+  Scenario: Get application instances info with optional query parameter ("appId")
     Given there are application instances created by operation createAppInstance
-    And the request path parameter "$.appId" is set to a valid application ID
+    And the request query parameter "appId" is set to a valid application ID
     When the request "getAppInstances" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
@@ -35,9 +35,9 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getAppInstance
     And information of all existing app instances of given app is returned
     And the response body complies with the OAS schema at "/components/schemas/AppInstanceInfo"
   @eam_getAppInstances_03_success_scenario_filtered_by_region
-  Scenario: Get application instances info with mandatory parameter ("region")
+  Scenario: Get application instances info with optional query parameter ("region")
     Given there are application instances created by operation createAppInstance
-    And the request path parameter "$.region" is set to a valid application ID
+    And the request query parameter "region" is set to a valid Edge Cloud Region name
     When the request "getAppInstances" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"

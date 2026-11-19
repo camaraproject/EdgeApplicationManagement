@@ -23,7 +23,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation addKubernetesC
   @eam_addKubernetesCluster_01_generic_success_scenario
   Scenario: Add a Kubernetes cluster to an existing deployment with mandatory parameters
     Given there is a deployment created by operation createAppDeployment
-    And the request path parameter "$.appDeploymentId" is set to a valid application deployment ID
+    And the request path parameter {appDeploymentId} is set to a valid application deployment ID
     And the request body property "$.kubernetesClusterRef" is set to a valid kubernetes cluster not yet part of the deployment
     When the request "addKubernetesCluster" is sent
     Then the response status code is 200
@@ -36,7 +36,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation addKubernetesC
   @eam_addKubernetesCluster_409.1_already_exists
   Scenario: Add a Kubernetes cluster already part of the deployment
     Given there is a deployment created by operation createAppDeployment
-    And the request path parameter "$.appDeploymentId" is set to a valid application deployment ID
+    And the request path parameter {appDeploymentId} is set to a valid application deployment ID
     And the request body property "$.kubernetesClusterRef" is set to a kubernetes cluster already part of the deployment
     When the request "addKubernetesCluster" is sent
     Then the response status code is 409
@@ -48,7 +48,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation addKubernetesC
   @eam_addKubernetesCluster_409.2_incompatible_state
   Scenario: Add a Kubernetes cluster to a non-Kubernetes cluster-based deployment
     Given there is a deployment created by operation createAppDeployment with edgeCloudZones
-    And the request path parameter "$.appDeploymentId" is set to a valid application deployment ID
+    And the request path parameter {appDeploymentId} is set to a valid application deployment ID
     And the request body property "$.kubernetesClusterRef" is set to a valid kubernetes cluster
     When the request "addKubernetesCluster" is sent
     Then the response status code is 409
@@ -81,7 +81,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation addKubernetesC
   # Error 404
   @eam_addKubernetesCluster_404.1_invalid_parameter
   Scenario: Add a Kubernetes cluster to a non-existing deployment
-    Given the request path parameter "$.appDeploymentId" is set to an invalid application deployment ID
+    Given the request path parameter {appDeploymentId} is set to an invalid application deployment ID
     When the request "addKubernetesCluster" is sent
     Then the response status code is 404
     And the response header "x-correlator" has same value as the request header "x-correlator"

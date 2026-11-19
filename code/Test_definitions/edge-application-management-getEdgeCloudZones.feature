@@ -32,7 +32,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
   @eam_getEdgeCloudZones_02_success_scenario_filtered_by_countryCode
   Scenario: Get information of existing Edge Cloud Zones with optional parameter ("countryCode")
     Given There are at least one Edge Cloud Zones available
-    And the request query parameter "$.countryCode" is set to a valid ISO 3166-1 alpha-2 country code
+    And the request query parameter "countryCode" is set to a valid ISO 3166-1 alpha-2 country code
     When the request "getEdgeCloudZones" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
@@ -43,7 +43,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
   @eam_getEdgeCloudZones_03_success_scenario_filtered_by_edgeCloudProvider
   Scenario: Get information of existing Edge Cloud Zones with optional parameter ("edgeCloudProvider")
     Given There are at least one Edge Cloud Zones available
-    And the request query parameter "$.edgeCloudProvider" is set to a valid Edge Cloud Provider name
+    And the request query parameter "edgeCloudProvider" is set to a valid Edge Cloud Provider name
     When the request "getEdgeCloudZones" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
@@ -54,7 +54,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
   @eam_getEdgeCloudZones_04_success_scenario_filtered_by_edgeCloudRegion
   Scenario: Get information of existing Edge Cloud Zones with optional parameter ("edgeCloudRegion")
     Given There are at least one Edge Cloud Zones available
-    And the request query parameter "$.edgeCloudRegion" is set to a valid Edge Cloud Provider-specific region name
+    And the request query parameter "edgeCloudRegion" is set to a valid Edge Cloud Provider-specific region name
     When the request "getEdgeCloudZones" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
@@ -65,7 +65,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
   @eam_getEdgeCloudZones_05_success_scenario_filtered_by_kubernetesClusterRef
   Scenario: Get information of the Edge Cloud Zone containing a given Kubernetes cluster
     Given There are at least one Edge Cloud Zones available with Kubernetes clusters
-    And the request query parameter "$.kubernetesClusterRef" is set to a valid kubernetes cluster
+    And the request query parameter "kubernetesClusterRef" is set to a valid kubernetes cluster
     When the request "getEdgeCloudZones" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
@@ -77,7 +77,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
   @eam_getEdgeCloudZones_06_success_scenario_filtered_by_status
   Scenario: Get information of existing Edge Cloud Zones with optional parameter ("status")
     Given There are at least one Edge Cloud Zones available
-    And the request query parameter "$.status" is set to a valid status
+    And the request query parameter "status" is set to a valid status
     When the request "getEdgeCloudZones" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
@@ -98,8 +98,8 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
   @eam_getEdgeCloudZones_08_success_scenario_paginated
   Scenario: Get a specific page of existing Edge Cloud Zones with optional parameters ("page", "perPage")
     Given there are more Edge Cloud Zones available than the requested "perPage" value
-    And the request query parameter "$.page" is set to a valid page number
-    And the request query parameter "$.perPage" is set to a valid perPage value
+    And the request query parameter "page" is set to a valid page number
+    And the request query parameter "perPage" is set to a valid perPage value
     When the request "getEdgeCloudZones" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
@@ -110,7 +110,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
   # Error 400
   @eam_getEdgeCloudZones_400.1_invalid_page
   Scenario: Invalid pagination parameter ("page")
-    Given the request query parameter "$.page" is set to an invalid page number
+    Given the request query parameter "page" is set to an invalid page number
     When the request "getEdgeCloudZones" is sent
     Then the response status code is 400
     And the response header "x-correlator" has same value as the request header "x-correlator"

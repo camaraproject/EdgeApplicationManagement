@@ -18,7 +18,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation deleteApp
   @eam_deleteApp_01_generic_success_scenario
   Scenario: Delete all the information and content related to an Application with mandatory parameter ("appId")
     Given there are no running instances of the app
-    And the path parameter "$.appId" is set to a valid application ID
+    And the request path parameter {appId} is set to a valid application ID
     When the request "deleteApp" is sent
     Then response status code is 202
     And the response header "Content-Type" is "application/json"
@@ -30,7 +30,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation deleteApp
   @eam_deleteApp_409.1_incompatible_state
   Scenario: Error response for deleting an application with a running instance
     Given there is at least one running instance of the app
-    And the path parameter "$.appId" is set to a valid application ID
+    And the request path parameter {appId} is set to a valid application ID
     When the request "deleteApp" is sent
     Then response status code is 409
     And the response header "x-correlator" has same value as the request header "x-correlator"
@@ -42,7 +42,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation deleteApp
   @eam_deleteApp_404.1_invalid_parameter
   Scenario: Error response for deleting a non-existing app
     Given there are running instances of the app
-    And the path parameter "$.appId" is set to an invalid application ID
+    And the request path parameter {appId} is set to an invalid application ID
     When the request "deleteApp" is sent
     Then response status code is 404
     And the response header "x-correlator" has same value as the request header "x-correlator"
