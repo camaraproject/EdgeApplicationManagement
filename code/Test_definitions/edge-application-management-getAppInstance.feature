@@ -24,11 +24,11 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getAppInstance
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "/components/schemas/AppInstanceInfo"
-    And the response property "$name" has the value provided for createAppInstance
-    And the response property "$appId" has the value provided for createAppInstance
-    And the response property "$appInstanceId" has the value provided for createAppInstance and used as path parameter
-    And the response property "$appProvider" has the value provided for createAppInstance
-    And the response property "$edgeCloudZoneId" has the value provided for createAppInstance
+    And the response property "$.name" has the value provided for createAppInstance
+    And the response property "$.appId" has the value provided for createAppInstance
+    And the response property "$.appInstanceId" has the value provided for createAppInstance and used as path parameter
+    And the response property "$.appProvider" has the value provided for createAppInstance
+    And the response property "$.edgeCloudZoneId" has the value provided for createAppInstance
   # Errors
   # Error 404
   @eam_getAppInstance_404.1_not_found

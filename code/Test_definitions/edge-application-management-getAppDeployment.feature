@@ -24,10 +24,10 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getAppDeployme
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "/components/schemas/AppDeploymentInfo"
-    And the response property "$appDeploymentName" has the value provided for createAppDeployment
-    And the response property "$appId" has the value provided for createAppDeployment
-    And the response property "$appDeploymentId" has the value provided for createAppDeployment and used as path parameter
-    And the response property "$edgeCloudZones" has the value provided for createAppDeployment
+    And the response property "$.appDeploymentName" has the value provided for createAppDeployment
+    And the response property "$.appId" has the value provided for createAppDeployment
+    And the response property "$.appDeploymentId" has the value provided for createAppDeployment and used as path parameter
+    And the response property "$.edgeCloudZones" has the value provided for createAppDeployment
   # Errors
   # Error 404
   @eam_getAppDeployment_404.1_not_found
