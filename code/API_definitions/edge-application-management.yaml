@@ -30,10 +30,10 @@ info:
     Platform, the Application Provider can instantiate the application.
     Edge Cloud Provider helps Application Provider to decide where to
     instantiate the applications allowing them to retrieve a list of
-    Edge Cloud Zones that meets the provided criteria.
+    Edge Cloud Zones that meet the provided criteria.
 
     This discovery can be filtered by a specific geographical region
-    (e.g when data residency is need) and by status (active, inactive, unknown)
+    (e.g. when data residency is needed) and by status (active, inactive, unknown).
     Application Provider can ask the Edge Cloud Platform to instantiate the
     application to one or several Edge Cloud Zones that meet the criteria.
     Typically when more than one Edge Cloud Zone is required in the same
