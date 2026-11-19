@@ -1,4 +1,4 @@
-Feature: CAMARA Edge Application Management API, vwip - Operations getApps
+Feature: CAMARA Edge Application Management API, vwip - Operation getApps
   # Input to be provided by the implementation to the tester
   #
   # Implementation indications:
@@ -21,7 +21,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operations getApps
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And A list of applications with information of them is returned
+    And a list of applications with information of them is returned
     And the response body is an array complying with the OAS schema at "/components/schemas/AppManifestInfo"
   # Errors
   # Error 401

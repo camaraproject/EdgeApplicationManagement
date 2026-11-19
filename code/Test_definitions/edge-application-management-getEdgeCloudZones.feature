@@ -18,7 +18,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
   #/edge-cloud-zones	GET 200
   @eam_getEdgeCloudZones_01_generic_success_scenario
   Scenario: Get a paginated list of existing edge cloud zones
-    Given There are at least one Edge Cloud Zones available
+    Given there is at least one Edge Cloud Zone available
     When the request "getEdgeCloudZones" is sent
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
@@ -30,7 +30,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
   #/edge-cloud-zones	GET	200	filtered by countryCode
   @eam_getEdgeCloudZones_02_success_scenario_filtered_by_countryCode
   Scenario: Get information of existing Edge Cloud Zones with optional parameter ("countryCode")
-    Given There are at least one Edge Cloud Zones available
+    Given there is at least one Edge Cloud Zone available
     And the request query parameter "countryCode" is set to a valid ISO 3166-1 alpha-2 country code
     When the request "getEdgeCloudZones" is sent
     Then the response status code is 200
@@ -41,7 +41,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
   #/edge-cloud-zones	GET	200	filtered by edgeCloudProvider
   @eam_getEdgeCloudZones_03_success_scenario_filtered_by_edgeCloudProvider
   Scenario: Get information of existing Edge Cloud Zones with optional parameter ("edgeCloudProvider")
-    Given There are at least one Edge Cloud Zones available
+    Given there is at least one Edge Cloud Zone available
     And the request query parameter "edgeCloudProvider" is set to a valid Edge Cloud Provider name
     When the request "getEdgeCloudZones" is sent
     Then the response status code is 200
@@ -52,7 +52,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
   #/edge-cloud-zones	GET	200	filtered by edgeCloudRegion
   @eam_getEdgeCloudZones_04_success_scenario_filtered_by_edgeCloudRegion
   Scenario: Get information of existing Edge Cloud Zones with optional parameter ("edgeCloudRegion")
-    Given There are at least one Edge Cloud Zones available
+    Given there is at least one Edge Cloud Zone available
     And the request query parameter "edgeCloudRegion" is set to a valid Edge Cloud Provider-specific region name
     When the request "getEdgeCloudZones" is sent
     Then the response status code is 200
@@ -63,7 +63,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
   #/edge-cloud-zones	GET	200	filtered by kubernetesClusterRef
   @eam_getEdgeCloudZones_05_success_scenario_filtered_by_kubernetesClusterRef
   Scenario: Get information of the Edge Cloud Zone containing a given Kubernetes cluster
-    Given There are at least one Edge Cloud Zones available with Kubernetes clusters
+    Given there is at least one Edge Cloud Zone available with Kubernetes clusters
     And the request query parameter "kubernetesClusterRef" is set to a valid kubernetes cluster
     When the request "getEdgeCloudZones" is sent
     Then the response status code is 200
@@ -75,7 +75,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
   #/edge-cloud-zones	GET	200	filtered by status
   @eam_getEdgeCloudZones_06_success_scenario_filtered_by_status
   Scenario: Get information of existing Edge Cloud Zones with optional parameter ("status")
-    Given There are at least one Edge Cloud Zones available
+    Given there is at least one Edge Cloud Zone available
     And the request query parameter "status" is set to a valid status
     When the request "getEdgeCloudZones" is sent
     Then the response status code is 200
