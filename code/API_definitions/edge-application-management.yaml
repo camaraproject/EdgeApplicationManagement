@@ -1205,8 +1205,9 @@ paths:
         - Application
       summary: Add a Kubernetes cluster to an Application Deployment
       description: |
-        Add a specific Kubernetes cluster, within an Edge Cloud Zone already
-        part of the deployment, to be used by the application deployment.
+        Add a specific Kubernetes cluster to be used by the application
+        deployment. If the Edge Cloud Zone of the cluster is not yet part of
+        the deployment, it is added to the deployment's `edgeCloudZones`.
 
         Only applicable to deployments whose application requires
         Kubernetes resources (`requiredResources.infrastructureKind` is
