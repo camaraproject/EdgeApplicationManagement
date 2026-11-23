@@ -5,7 +5,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation createAppDeplo
   # * apiRoot: API root of the server URL
   #
   # Testing assets:
-  # * An AppId of an application already submited by the operation submitApp
+  # * An AppId of an application already submitted by the operation submitApp
   # * At least one edgeCloudZoneId available to deploy the application
   #
   # References to OAS spec schemas refer to schemas specified in edge-application-management.yaml
