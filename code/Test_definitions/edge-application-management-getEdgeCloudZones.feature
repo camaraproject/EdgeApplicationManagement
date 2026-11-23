@@ -12,7 +12,6 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
   Background: Common getEdgeCloudZones setup
     Given an environment at "apiRoot"
     And the resource "/edge-application-management/vwip/edge-cloud-zones"
-    And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
   # Success scenarios
