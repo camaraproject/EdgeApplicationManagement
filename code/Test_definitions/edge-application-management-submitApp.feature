@@ -45,6 +45,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation submitApp
     Then the response status code is 409
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response header "Content-Type" is "application/json"
+    And the response property "$.status" is 409
     And the response property "$.code" is "ALREADY_EXISTS"
     And the response property "$.message" contains a user friendly text
   # Error 400
@@ -79,7 +80,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation submitApp
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
   @eam_submitApp_400.4_empty_property
-  Scenario: Error response for empty property in request body
+  Scenario Outline: Error response for empty required property "<required_property>" in request body
     Given the request body property "<required_property>" is set to {}
     When the request "submitApp" is sent
     Then the response status code is 400
@@ -88,6 +89,16 @@ Feature: CAMARA Edge Application Management API, vwip - Operation submitApp
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
+
+    Examples:
+      | required_property   |
+      | $.name              |
+      | $.version           |
+      | $.appProvider       |
+      | $.packageType       |
+      | $.repository        |
+      | $.requiredResources |
+      | $.componentSpec     |
   # Error 401
   @eam_submitApp_401.1_missing_access_token
   Scenario: Missing access token

@@ -57,6 +57,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation createAppDeplo
     Then the response status code is 409
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response property "$.status" is 409
     And the response property "$.code" is "ALREADY_EXISTS"
     And the response property "$.message" contains a user friendly text
   # Error 400
@@ -91,7 +92,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation createAppDeplo
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
   @eam_createAppDeployment_400.4_empty_property
-  Scenario: Error response for empty property in request body
+  Scenario Outline: Error response for empty required property "<required_property>" in request body
     Given the request body property "<required_property>" is set to {}
     When the request "createAppDeployment" is sent
     Then the response status code is 400
@@ -100,6 +101,13 @@ Feature: CAMARA Edge Application Management API, vwip - Operation createAppDeplo
     And the response property "$.status" is 400
     And the response property "$.code" is "INVALID_ARGUMENT"
     And the response property "$.message" contains a user friendly text
+
+    Examples:
+      | required_property       |
+      | $.appDeploymentName     |
+      | $.appId                 |
+      | $.edgeCloudZones        |
+      | $.kubernetesClusterRefs |
   @eam_createAppDeployment_400.5_both_zones_and_clusters_specified
   Scenario: Error response when both edgeCloudZones and kubernetesClusterRefs are specified
     Given the request body property "$.edgeCloudZones" is set to a valid list of edge zone ids
