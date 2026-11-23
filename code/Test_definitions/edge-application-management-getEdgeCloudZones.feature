@@ -70,7 +70,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.edgeCloudZones" contains exactly one Edge Cloud Zone
-    And the response property "$.edgeCloudZones[0].clusters" contains the value provided for "$.kubernetesClusterRef"
+    And the response property "$.edgeCloudZones[0].clusters[*].kubernetesClusterRef" contains the value provided for the request query parameter "kubernetesClusterRef"
     And the response body complies with the OAS schema at "/components/schemas/EdgeCloudZoneList"
   #/edge-cloud-zones	GET	200	filtered by status
   @eam_getEdgeCloudZones_06_success_scenario_filtered_by_status
@@ -103,8 +103,8 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getEdgeCloudZo
     Then the response status code is 200
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response property "$.pagination.page" has the value provided for "$.page"
-    And the response property "$.pagination.perPage" has the value provided for "$.perPage"
+    And the response property "$.pagination.page" has the value provided for the request query parameter "page"
+    And the response property "$.pagination.perPage" has the value provided for the request query parameter "perPage"
     And the response body complies with the OAS schema at "/components/schemas/EdgeCloudZoneList"
   # Error 400
   @eam_getEdgeCloudZones_400.1_invalid_page
