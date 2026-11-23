@@ -31,7 +31,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation submitApp
     When the request "submitApp" is sent
     Then the response status code is 201
     And the response header "Content-Type" is "application/json"
-    And the response header "x-correlator" has the same value as the request header "x-correlator"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response body complies with the OAS schema at "/components/schemas/SubmittedApp"
     And the response property "$.appId" is returned
   # Error scenarios

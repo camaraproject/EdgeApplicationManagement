@@ -11,7 +11,6 @@ Feature: CAMARA Edge Application Management API, vwip - Operation deleteApp
   Background: Common deleteApp setup
     Given an environment at "apiRoot"
     And the resource "/edge-application-management/vwip/apps/{appId}"
-    And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
   # Success scenarios
@@ -21,9 +20,8 @@ Feature: CAMARA Edge Application Management API, vwip - Operation deleteApp
     And the request path parameter {appId} is set to a valid application ID
     When the request "deleteApp" is sent
     Then the response status code is 202
-    And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response body complies with the OAS schema for this operation and status code
+    And the response body is empty
     And the application information is deleted
   # Errors
   # Error 409

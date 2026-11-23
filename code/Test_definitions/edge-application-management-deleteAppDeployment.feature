@@ -12,7 +12,6 @@ Feature: CAMARA Edge Application Management API, vwip - Operation deleteAppDeplo
   Background: Common deleteAppDeployment setup
     Given an environment at "apiRoot"
     And the resource "/edge-application-management/vwip/deployments/{appDeploymentId}"
-    And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
   # Success scenarios
@@ -22,9 +21,8 @@ Feature: CAMARA Edge Application Management API, vwip - Operation deleteAppDeplo
     And the request path parameter {appDeploymentId} is set to a valid application deployment ID
     When the request "deleteAppDeployment" is sent
     Then the response status code is 202
-    And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response body complies with the OAS schema for this operation and status code
+    And the response body is empty
   # Errors
   # Error 404
   @eam_deleteAppDeployment_404.1_invalid_parameter

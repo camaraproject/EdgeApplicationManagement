@@ -27,7 +27,8 @@ Feature: CAMARA Edge Application Management API, vwip - Operation createAppInsta
     When the request "createAppInstance" is sent
     Then the response status code is 202
     And the response header "Content-Type" is "application/json"
-    And the response header "x-correlator" has the same value as the request header "x-correlator"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response header "Location" is present
     And the response body complies with the OAS schema at "/components/schemas/AppInstanceInfo"
   @eam_createAppInstance_02_success_scenario_kubernetes_cluster
   Scenario: Instantiate a Kubernetes application with mandatory parameters ("name", "appId" and "kubernetesClusterRef" in body)
@@ -38,7 +39,8 @@ Feature: CAMARA Edge Application Management API, vwip - Operation createAppInsta
     When the request "createAppInstance" is sent
     Then the response status code is 202
     And the response header "Content-Type" is "application/json"
-    And the response header "x-correlator" has the same value as the request header "x-correlator"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
+    And the response header "Location" is present
     And the response body complies with the OAS schema at "/components/schemas/AppInstanceInfo"
   # Error scenarios
   #Error 409
@@ -48,11 +50,11 @@ Feature: CAMARA Edge Application Management API, vwip - Operation createAppInsta
     And the request body property "$.name" is set to a valid name
     And the request body property "$.appId" is set to a valid application ID
     And the request body property "$.edgeCloudZoneId" is set to a valid edge zone id
-    And Application instance with "$.name" and "$.appId" is already running in "$.edgeCloudZoneId"
+    And an application instance with "$.name" and "$.appId" is already running in "$.edgeCloudZoneId"
     When the request "createAppInstance" is sent
     Then the response status code is 409
     And the response header "Content-Type" is "application/json"
-    And the response header "x-correlator" has the same value as the request header "x-correlator"
+    And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response property "$.code" is "ALREADY_EXISTS"
     And the response property "$.message" contains a user friendly text
   # Error 400
