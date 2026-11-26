@@ -20,9 +20,9 @@ Feature: CAMARA Edge Application Management API, vwip - Operation submitApp
   @eam_submitApp_01_generic_success_scenario
   Scenario: Common validations for any success scenario. Submit an App with mandatory parameters
   # Valid testing device and default request body compliant with the schema
-    Given A valid application to be submitted
+    Given a valid application to be submitted
     And the request body property "$.name" is set to a valid name
-    And the request body property "$.appProvider" is set to a application provider
+    And the request body property "$.appProvider" is set to an application provider
     And the request body property "$.version" is set to a valid version
     And the request body property "$.packageType" is set to a valid package type
     And the request body property "$.repository" is set to a valid repository

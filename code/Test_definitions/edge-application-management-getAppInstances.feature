@@ -19,7 +19,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation getAppInstance
     Given there are application instances created by operation createAppInstance
     When the request "getAppInstances" is sent
     Then the response status code is 200
-    And A list of existing app instances is returned
+    And a list of existing app instances is returned
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And the response body is an array complying with the OAS schema at "/components/schemas/AppInstanceInfo"
