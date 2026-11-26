@@ -23,7 +23,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operations getApps
     And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
     And A list of applications with information of them is returned
-    And the response body complies with the OAS schema at "/components/schemas/AppManifestInfo"
+    And the response body is an array complying with the OAS schema at "/components/schemas/AppManifestInfo"
   # Errors
   # Error 401
   @eam_getApps_401.1_missing_access_token
