@@ -12,7 +12,6 @@ Feature: CAMARA Edge Application Management API, vwip - Operation deleteAppInsta
   Background: Common deleteAppInstance setup
     Given an environment at "apiRoot"
     And the resource "/edge-application-management/vwip/app-instances/{appInstanceId}"
-    And the header "Content-Type" is set to "application/json"
     And the header "Authorization" is set to a valid access token
     And the header "x-correlator" complies with the schema at "#/components/schemas/XCorrelator"
   # Success scenarios
@@ -22,18 +21,16 @@ Feature: CAMARA Edge Application Management API, vwip - Operation deleteAppInsta
     And the request path parameter {appInstanceId} is set to a valid application instance ID
     When the request "deleteAppInstance" is sent
     Then the response status code is 202
-    And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response body complies with the OAS schema for this operation and status code
+    And the response body is empty
   @eam_deleteAppInstance_02_generic_success_scenario_sync
   Scenario: Delete a running instance of an application within an Edge Cloud Zone with mandatory parameter ("appInstanceId") - sync
     Given there are application instances running
     And the request path parameter {appInstanceId} is set to a valid application instance ID
     When the request "deleteAppInstance" is sent
     Then the response status code is 204
-    And the response header "Content-Type" is "application/json"
     And the response header "x-correlator" has same value as the request header "x-correlator"
-    And the response body complies with the OAS schema for this operation and status code
+    And the response body is empty
   # Errors
   # Error 404
   @eam_deleteAppInstance_404.1_invalid_parameter
