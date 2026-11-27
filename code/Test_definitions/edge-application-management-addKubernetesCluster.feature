@@ -7,8 +7,7 @@ Feature: CAMARA Edge Application Management API, vwip - Operation addKubernetesC
   # Testing assets:
   # * An appId of a submitted application and the values used in the submitApp operation.
   # * A deployment instantiated by createAppDeployment operation.
-  # * An additional kubernetesClusterRef, within an Edge Cloud Zone already part of the
-  #   deployment, not yet used by the deployment.
+  # * An additional kubernetesClusterRef not yet used by the deployment.
   #
   # References to OAS spec schemas refer to schemas specified in edge-application-management.yaml
   Background: Common addKubernetesCluster setup
